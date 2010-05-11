@@ -1,0 +1,155 @@
+# -------------------------------- General Settings --------------------------------
+
+#set mbox_type=Maildir
+
+#account-hook . 'unset imap_user; unset imap_pass; unset tunnel'
+account-hook . 'unset imap_user; unset imap_pass'
+
+set folder="$HOME/mail"
+
+# Organise how my folders are viewed.
+set sort=reverse-date-sent	# date-sent reverse-date-sent, threads
+set sort_aux = 'last-date-received'
+
+set mail_check=60				# Check other mailboxes every 60 secs.	 
+set timeout=15					# Check the current mailbox every 15 secs.	 
+
+# ^ forces a manual check for mail .
+bind index "^" imap-fetch-mail
+
+# + runs imapfilter to clean up spam and mailing lists.
+macro index "+"  "<shell-escape>printf 'y\\n' | imapfilter ; printf '\\n--- Waiting ---\\n' ; sleep 5<enter>imap-fetch-mail"  'Run imapfilter'
+
+# Stop Mutt saying "Press any key to continue" after training
+set wait_key=no
+
+
+# Set the header display for messages.
+ignore headers *
+unignore headers from to subject date cc
+hdr_order to from subject date
+# This (display-toggle-weed) set a key to turn on/off
+# all headers (should be h by default). 
+#set display-toggle-weed=
+
+
+unset mark_old		# don't mark messages as old
+set delete=yes		# delete without prompting
+set markers=no		# no + on wrapped lines
+
+# Toggle sidebar (if it's installed).
+macro index S '<enter-command>toggle sidebar_visible<enter>'
+macro pager S '<enter-command>toggle sidebar_visible<enter>'
+
+
+set noconfirmappend		# Append to mailbox without a question.
+set include				# Include the message in replies.
+
+#set postpone=ask-yes
+set postponed=+postponed
+
+
+#set nosmart_wrap                          # Don't want smart wrapping.
+set pager_stop                            # Don't skip msgs on next page.
+
+#set pager_context=3                       # Display 3 lines of context in pager.
+
+## To forward a message including attachments add:
+#set mime_forward=yes
+#set mime_forward_rest=yes
+## This will cause Mutt to attach the message rather than quoting it in the body of the message.
+## Otherwise use "bounce". 
+
+# Types displayable in a pager (via mailcap copiousoutput defs).
+auto_view text/html application/postscript image/pdf
+
+# Order of preference for type to display.
+alternative_order text/enriched text/plain text image/pdf application/postscript 
+
+set move=no		# Don't move read messages to $mbox
+
+
+# -------------------------------- gmail Settings --------------------------------
+
+set folder="$HOME/mail"
+
+set spoolfile="imaps://time.capsule.testing\@gmail.com@imap.googlemail.com/INBOX"
+
+mailboxes imaps://time.capsule.testing\@gmail.com@imap.googlemail.com/
+
+##set imap_user=gmail
+#set imap_pass=uptol125fdmdta
+
+account-hook imaps://time.capsule.testing\@gmail.com@imap.googlemail.com/  \
+	set imap_pass=porcorosso
+
+## Sending options
+#set sendmail="msmtp -a gmail"
+#set from=time.capsule.testing@gmail.com
+#set realname=""								# don't give a name in "name <email-add>"
+
+folder-hook imaps://time.capsule.testing\@gmail.com@imap.googlemail.com/*  \
+'	set sendmail="msmtp\ -a\ gmail" ;  \
+	set from=time.capsule.testing@gmail.com ;  \
+	set realname=""  '
+
+
+# -------------------------------- color settings --------------------------------
+## Simple colour scheme.
+#
+# see: http://www.mutt.org/doc/manual/manual-3.html#ss3.7
+
+# Colours for the Pager headers
+color header red default to
+color header red default from
+color header blue default subject  
+color header green default date
+color hdrdefault default default
+
+# Colours for the Pager body
+color quoted red default
+#color quoted green default \[--.*--\]
+color body blue default '\[--[^-]*--\]'
+#color body blue default "Attachment"
+color attachment blue default 
+#color attachment blue default "\[--[^-]*--\]"
+color body blue default "Type"
+
+# Attacments (incl. in pager)
+color attachment default default
+
+# Arrows.
+#color indicator default default
+color tree default default
+
+# Colours for Index
+color status brightwhite black
+color indicator default green
+color normal     default    default
+color index      brightblue default  ~F         # Flagged
+color index      blue       default  ~F         # Flagged
+color index      red        default  ~N         # New
+color index      magenta    default  ~T         # Tagged
+color index      yellow     default  ~D         # Deleted
+
+
+
+# Example def colours from:
+#   http://aperiodic.net/phil/configs/mutt/colors
+#color normal     white         default
+##color hdrdefault green         default
+#color quoted    green         default
+#color quoted1    yellow        default
+#color quoted2    red           default
+#color signature  cyan          default
+#color indicator  brightyellow  red
+#color error      brightred     default
+#color status    brightwhite   blue
+#color tree  brightmagenta default
+#color tilde     blue          default
+#color attachment brightyellow  default
+#color markers   brightred     default
+#color message    white         default
+#color search     brightwhite   magenta
+#color bold       brightyellow  default
+

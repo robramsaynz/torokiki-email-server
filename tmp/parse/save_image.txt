@@ -1,0 +1,7 @@
+action: "add-content"
+
+type: "image"
+
+description: "A tiger at the Wellington zoo."
+tag: "Animal images"
+

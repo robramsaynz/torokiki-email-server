@@ -1,0 +1,14 @@
+action: "add-content"
+
+type: "text"
+subtype: "poetry"
+
+text: 
+"Tiger, tiger, burning bright,
+In the forest of the night,
+What immortal hand or eye
+Could frame thy fearful symmetry?"
+
+description: "The Tiger, a poem by William Blake"
+tag: "Animal poetry"
+
