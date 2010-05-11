@@ -1,0 +1,133 @@
+Delivered-To: time.capsule.testing@gmail.com
+Received: by 10.142.191.9 with SMTP id o9cs38491wff; Mon, 10 May 2010 23:17:44
+ -0700 (PDT)
+Received: by 10.115.39.34 with SMTP id r34mr4068631waj.123.1273558664183; Mon,
+ 10 May 2010 23:17:44 -0700 (PDT)
+Return-Path: <robert.ramsay.nz@gmail.com>
+Received: from mail-pw0-f47.google.com (mail-pw0-f47.google.com
+ [209.85.160.47]) by mx.google.com with ESMTP id
+ 26si639903pzk.78.2010.05.10.23.17.43; Mon, 10 May 2010 23:17:43 -0700 (PDT)
+Received-SPF: pass (google.com: domain of robert.ramsay.nz@gmail.com
+ designates 209.85.160.47 as permitted sender) client-ip=209.85.160.47;
+Authentication-Results: mx.google.com; spf=pass (google.com: domain of
+ robert.ramsay.nz@gmail.com designates 209.85.160.47 as permitted sender)
+ smtp.mail=robert.ramsay.nz@gmail.com; dkim=pass (test mode)
+ header.i=@gmail.com
+Received: by mail-pw0-f47.google.com with SMTP id 5so1824927pwj.34 for
+ <time.capsule.testing@gmail.com>; Mon, 10 May 2010 23:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+ h=domainkey-signature:received:received:date:from:to:subject
+ :message-id:mime-version:content-type:content-disposition:user-agent;
+ bh=tLWW3E2EVArbhT58kU85Bi0pXeuaIW2+C8ajOOYJZw0=;
+ b=UyuLmJZgLAG6dKhxuurQM15OLtEbXz/j+UrbZlMlAUuF/hGk4Z2T9YbDOnBPvviRC6
+ mZY/hc8IaXUly3lnKbk/g4OnJssWr0MZEL/IsbuH4w6W+YnWBjg3IqQhVh/iZ2oCNVjp
+ fFJPTXED8OMD0c0SMXrBeGJ6eJww2JV3E7pgM=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
+ h=date:from:to:subject:message-id:mime-version:content-type
+ :content-disposition:user-agent;
+ b=NT/tUJPskeOux1yDLufdJwkL+mAkebyi5+H+RDm5cQrWRrqPxn0PIpJG8GWwIYRn2+
+ ATgGguJlfT7RTWidelH6w8OAiUkRm4zBmrsBMAK69UrgSA7dycv0ZhpffLj4G0dmkGI1
+ wB23TIotmeJz0b6LLFVanfszSyWeCfm7XVfDw=
+Received: by 10.115.135.32 with SMTP id m32mr4085034wan.47.1273558662998; Mon,
+ 10 May 2010 23:17:42 -0700 (PDT)
+Return-Path: <robert.ramsay.nz@gmail.com>
+Received: from localhost ([132.181.247.226]) by mx.google.com with ESMTPS id
+ b6sm32345513wam.9.2010.05.10.23.17.40 (version=TLSv1/SSLv3 cipher=RC4-MD5);
+ Mon, 10 May 2010 23:17:42 -0700 (PDT)
+Date: Tue, 11 May 2010 18:17:07 +1200
+From: robert.ramsay.nz@gmail.com
+To: time.capsule.testing@gmail.com
+Subject: a
+Message-ID: <20100511061707.GA29329@stimpy>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="fUYQa+Pmc3FrFX/N"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-06-14)
+
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+action: "save-content"
+tag: "name"
+
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: image/jpeg
+Content-Disposition: attachment; filename="1.jpeg"
+Content-Transfer-Encoding: base64
+
+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
+
+--fUYQa+Pmc3FrFX/N--

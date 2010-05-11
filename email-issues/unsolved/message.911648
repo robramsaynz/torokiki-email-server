@@ -1,0 +1,49 @@
+Delivered-To: time.capsule.testing@gmail.com
+Received: by 10.142.191.9 with SMTP id o9cs38862wff; Mon, 10 May 2010 23:31:05
+ -0700 (PDT)
+Received: by 10.140.180.7 with SMTP id c7mr3449276rvf.44.1273559465333; Mon,
+ 10 May 2010 23:31:05 -0700 (PDT)
+Return-Path: <robert.ramsay.nz@gmail.com>
+Received: from mail-pw0-f47.google.com (mail-pw0-f47.google.com
+ [209.85.160.47]) by mx.google.com with ESMTP id
+ b2si12769487rvn.4.2010.05.10.23.31.04; Mon, 10 May 2010 23:31:04 -0700 (PDT)
+Received-SPF: pass (google.com: domain of robert.ramsay.nz@gmail.com
+ designates 209.85.160.47 as permitted sender) client-ip=209.85.160.47;
+Authentication-Results: mx.google.com; spf=pass (google.com: domain of
+ robert.ramsay.nz@gmail.com designates 209.85.160.47 as permitted sender)
+ smtp.mail=robert.ramsay.nz@gmail.com; dkim=pass (test mode)
+ header.i=@gmail.com
+Received: by mail-pw0-f47.google.com with SMTP id 5so1815987pwj.20 for
+ <time.capsule.testing@gmail.com>; Mon, 10 May 2010 23:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+ h=domainkey-signature:received:received:date:from:to:subject
+ :message-id:mime-version:content-type:content-disposition:user-agent;
+ bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+ b=p0YEmFa+on+83FXIvsuwZcW07FBHOu2QUzocHAWTrYIddDUbMGlt5uWAp00mDJzHHq
+ +aQPu+sWdpIx92/4o1spfSrpVyuGj8qvVHyXb1wQ6a9RVKbfS9QS45p9TYUTLJmYymDI
+ zTvWpN/dAqfCqMPmcpL3ByHWTeUHSTw42ieY4=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
+ h=date:from:to:subject:message-id:mime-version:content-type
+ :content-disposition:user-agent;
+ b=PNnOSDv6uLMyf82eaGz52YNmOQiZj8eJ396gou7u0phap3i19klri1gCxahKiTq4aB
+ g+2AOxQM55v5nP3P4SnLqM05WJFYt0LR/wriQG0m9d1xwRaniuA8eA0w1lNt5BwVT6zI
+ KfM5g44MlOu3Qb0IdKDQ7MN5HYRu1dXFBouwc=
+Received: by 10.115.134.11 with SMTP id l11mr4056072wan.160.1273559463318;
+ Mon, 10 May 2010 23:31:03 -0700 (PDT)
+Return-Path: <robert.ramsay.nz@gmail.com>
+Received: from localhost ([132.181.247.226]) by mx.google.com with ESMTPS id
+ d20sm32433102waa.3.2010.05.10.23.31.01 (version=TLSv1/SSLv3 cipher=RC4-MD5);
+ Mon, 10 May 2010 23:31:02 -0700 (PDT)
+Date: Tue, 11 May 2010 18:30:32 +1200
+From: robert.ramsay.nz@gmail.com
+To: time.capsule.testing@gmail.com
+Subject: empty
+Message-ID: <20100511063032.GD30419@stimpy>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-06-14)
+
+
+
+

@@ -1,8 +1,0 @@
-action: "add-content"
-
-type: "audio"
-subtype: "poetry"
-
-description: "Recital of The Tiger by William Blake"
-tag: "Animal poetry"
-
