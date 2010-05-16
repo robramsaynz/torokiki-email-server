@@ -145,9 +145,6 @@ sub process_email($)
 		return;
 	}
 
-#print "================\n";
-#print "$email_txt\n";
-#print "----------------\n";
 
 	my $tmp;
 ##	$tmp = JSON::PP->new->utf8->encode($wrapper_h);
@@ -233,9 +230,6 @@ sub read_email_meta($)
     close FILE;
 
     $email = Email::MIME->new($file_txt);
-print "================\n";
-print $email->debug_structure() . "\n";
-print "----------------\n";
     $header = $email->header_obj();
 
 
@@ -271,6 +265,33 @@ print "----------------\n";
 
 	return \%wrapper_hash;
 }
+
+
+# Takes a email-filename and prints a simple tree of the 
+# mime objects in that email.
+sub print_mime_tree($)
+{
+    # Files
+    my $file_name = $_[0];
+
+    my $email;
+    my $file_txt;
+
+
+	# ??: !! Duplication of previous code. Bad+slow.
+    open FILE, "<", $file_name;
+    {
+    local $/ = undef;   # read all of file
+    $file_txt = <FILE>;
+    }
+    close FILE;
+
+    $email = Email::MIME->new($file_txt);
+
+	print $email->debug_structure() . "\n";
+}
+
+
 
 sub stash_email($)
 {
