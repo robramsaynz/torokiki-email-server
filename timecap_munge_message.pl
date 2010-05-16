@@ -5,8 +5,15 @@
 # ??: !! + CJs image email has multipart/mixed with text/image/text.
 # ??: !! this throws off the parser which only picks up the first
 # ??: !! text/plain. The logical solution is to check for 
-# ??: !! multipart/mixed  message and then concatinate text/plain
-# ??: !! and/or text/html fields.
+# ??: !! multipart/mixed  message and then concatinate text/plain as
+# ??: !! one text/plain obj., and all text/html as one text/html obj.
+# ??: !! It would also be good to consider how multipart/related should 
+# ??: !! be read. ie how do you process this:
+# ??: !! + multipart/alternative; boundary=Apple-Mail-45-1045731686
+# ??: !!   	+ text/plain; charset=us-ascii; format=flowed
+# ??: !!    + multipart/related; boundary=Apple-Mail-46-1045731688; type="text/html"
+# ??: !!         + text/html; charset=utf-8
+# ??: !!         + image/jpeg; name=IMG_2004.JPG
 # ??: !! 
 # ??: !! + There should be reference to the unique number in the hash.
 # ??: !! this will probably require adjusting the program flow 
@@ -138,6 +145,9 @@ sub process_email($)
 		return;
 	}
 
+#print "================\n";
+#print "$email_txt\n";
+#print "----------------\n";
 
 	my $tmp;
 ##	$tmp = JSON::PP->new->utf8->encode($wrapper_h);
@@ -150,37 +160,41 @@ sub process_email($)
 	my %wrapper_hash = %{$wrapper_h};
 
 
-	if ($wrapper_hash{tag_info}{action} eq "add-content")
+	if ($wrapper_hash{tag_info}{action})
 	{
-		&stash_email($file_name, \%wrapper_hash, \@local_data);
-	}
-	elsif ($wrapper_hash{tag_info}{action} eq "get-content")
-	{
-		if ($wrapper_hash{tag_info}{id})
+		if ($wrapper_hash{tag_info}{action} eq "add-content")
 		{
-			my $entry_id = $wrapper_hash{tag_info}{id};
-			$entry_to_send = &get_entry(\@local_data, $entry_id);
-
-			my $recipient_email = $wrapper_hash{header_info}{From};
-
-			unless ($entry_to_send)
+			&stash_email($file_name, \%wrapper_hash, \@local_data);
+		}
+		elsif ($wrapper_hash{tag_info}{action} eq "get-content")
+		{
+			if ($wrapper_hash{tag_info}{id})
 			{
-				warn "process_email() error: ".
-				"attempt to retrive nonexistant entry_id: $entry_id, by $recipient_email\n";
-				return undef;
+				my $entry_id = $wrapper_hash{tag_info}{id};
+				$entry_to_send = &get_entry(\@local_data, $entry_id);
+
+				my $recipient_email = $wrapper_hash{header_info}{From};
+
+				unless ($entry_to_send)
+				{
+					warn "process_email() error: ".
+					"attempt to retrive nonexistant entry_id: $entry_id, by $recipient_email\n";
+					return undef;
+				}
+
+				my $email_txt = &create_meta_and_attach_email($recipient_email, $entry_to_send);
+#				my $email_txt = &create_meta_email($recipient_email, $entry_to_send);
+#				my $email_txt = &create_attach_email($recipient_email, $entry_to_send);
+
+				&send_email($email_txt);
 			}
-
-			my $email_txt = &create_meta_and_attach_email($recipient_email, $entry_to_send);
-#			my $email_txt = &create_meta_email($recipient_email, $entry_to_send);
-#			my $email_txt = &create_attach_email($recipient_email, $entry_to_send);
-
-			&send_email($email_txt);
 		}
 	}
 	else
 	{
 		warn "Warning: No valid action found in email. Ignoring.\n";
 	}	
+
 	return 1;
 }
 
@@ -219,6 +233,9 @@ sub read_email_meta($)
     close FILE;
 
     $email = Email::MIME->new($file_txt);
+print "================\n";
+print $email->debug_structure() . "\n";
+print "----------------\n";
     $header = $email->header_obj();
 
 
@@ -455,6 +472,13 @@ sub convert_html_email_to_txt($)
 #
 # returns -3 on general error, -2 for more than one attachment, 
 # -1 for not attachments, and the Email::MIME object on success.
+#
+# ??: this needs to be rewritten after reading up on the mime 
+# ??: structure.
+# ??: For instance i'm assuming it's legal to have multiple 
+# ??: multipart/related objects nested. This parser will only find 
+# ??: a multipart/related object at the first multipart/related 
+# ??: level.
 sub get_email_attachment($)
 {
     my $email = $_[0];
@@ -467,8 +491,11 @@ sub get_email_attachment($)
         return -3;
     }
 
+	# Check for multipart/alternative, and multipart/mixed objects
+	# (which will be inlined at the top MIME level).
     for ( $email->subparts() )
     {
+		# Is it an attachement?
         unless (    $_->content_type =~ m{text/plain} ||
                     $_->content_type =~ m{text/html} ||
                     $_->content_type =~ m{multipart/.+} )
@@ -484,6 +511,39 @@ sub get_email_attachment($)
 
         }
     }
+
+	# Check for multipart/related objects and then check these for attachaments, 
+	# (which will be one level down in the MIME tree).
+	# ??: this has too many if/for levels. it should probably have some code 
+	# ??: shifted to a function.
+    for ( $email->subparts() )
+    {
+		if ($_->content_type =~ m{multipart/related} )
+		{
+			my $mime_multi_related = $_;
+
+			# Look for attachements.
+			for ( $mime_multi_related->subparts() )
+			{
+				unless (    $_->content_type =~ m{text/plain} ||
+							$_->content_type =~ m{text/html} ||
+							$_->content_type =~ m{multipart/.+} )
+				{
+					if ($attachment)
+					{
+						return -2; 
+					}
+					else
+					{
+						$attachment = $_; 
+					}
+
+				}
+			}
+		}
+    }
+
+
 
     if ($attachment)
     {
@@ -508,6 +568,10 @@ sub get_email_attachment($)
 #
 # ??: this fn is a bit bloated and should prob be split up.
 #
+# ??: Consider replacing this perl-fn version with a char by char version.
+# ??: this would be easier to read and modify, and would work by reading a 
+# ??: char at a time, looking for :/\s/"/\/... flags.
+#
 # Returns:	\%hash
 # or 		-1:	there was text in the email but it was empty.
 #			-2:	there was text in the email but it doesn't have any <tag: "value"> 
@@ -518,8 +582,8 @@ sub parse_txt_for_meta_data($)
 {
     my $email_txt = $_[0];
 
-    my $tag;
-    my $value;
+    my $tag = undef;
+    my $value = "";
 
     my %hash;
 
@@ -572,14 +636,14 @@ sub parse_txt_for_meta_data($)
             # be inserted and the next $_ is also part of the value.
             if (/\\$/)
             { 
-                $value .= $_."\"";
+                $value = $value . $_. "\"" ;
             }
             else
             {
                 $hash{$tag} =  $value . $_;
 
-                $value = undef;
                 $tag = undef;
+                $value = "";
             }
         }   
     }
