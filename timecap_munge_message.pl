@@ -10,7 +10,7 @@
 # ??: !! It would also be good to consider how multipart/related should 
 # ??: !! be read. ie how do you process this:
 # ??: !! + multipart/alternative; boundary=Apple-Mail-45-1045731686
-# ??: !!   	+ text/plain; charset=us-ascii; format=flowed
+# ??: !!    + text/plain; charset=us-ascii; format=flowed
 # ??: !!    + multipart/related; boundary=Apple-Mail-46-1045731688; type="text/html"
 # ??: !!         + text/html; charset=utf-8
 # ??: !!         + image/jpeg; name=IMG_2004.JPG
@@ -31,31 +31,31 @@
 # ??: !! 
 
 
-#	-------- Data strucutres --------
+#   -------- Data strucutres --------
 #
-#	@local_data 
-#   	- %entry
-#		|	|-db_info: %db_info
-#		|	|			|-unique_id: "00001"
-#		|	|			|-data_file: "stash/00001.dat
-#		|	|			|-meta_file: "stash/00001.meta
-#		|	|
-#		|	|-mime_info_ref: \%mine_info_ref
-#		|	|	|-full: \%full
-#		|	|	|		|-ie-Content-Disposition : "attachment; filename=\"CV - Nacky Latorre.pdf\""
-#		|	|	|		...
-#		|	|	|-splitup: \%splitup
-#		|	|				|-ie-filename: "\"CV - Nacky Latorre.pdf\""
-#		|	|				|-ie-Content-Disposition: "attachment"
-#		|	|				...
-#		|	|-header_info: \%header_info
-#		|	|				|-ie-Subject: "Re: C.V.",
-#		|	|				...
-#		|	|-tag_info: \%tag_info
-#		|				|-ie-action: "save doc"
-#		|				...
-#		|- %entry
-#		...
+#   @local_data 
+#       - %entry
+#       |   |-db_info: %db_info
+#       |   |           |-unique_id: "00001"
+#       |   |           |-data_file: "stash/00001.dat
+#       |   |           |-meta_file: "stash/00001.meta
+#       |   |
+#       |   |-mime_info_ref: \%mine_info_ref
+#       |   |   |-full: \%full
+#       |   |   |       |-ie-Content-Disposition : "attachment; filename=\"CV - Nacky Latorre.pdf\""
+#       |   |   |       ...
+#       |   |   |-splitup: \%splitup
+#       |   |               |-ie-filename: "\"CV - Nacky Latorre.pdf\""
+#       |   |               |-ie-Content-Disposition: "attachment"
+#       |   |               ...
+#       |   |-header_info: \%header_info
+#       |   |               |-ie-Subject: "Re: C.V.",
+#       |   |               ...
+#       |   |-tag_info: \%tag_info
+#       |               |-ie-action: "save doc"
+#       |               ...
+#       |- %entry
+#       ...
 
 
 
@@ -65,7 +65,7 @@ use JSON::PP;
 use IO::All;
 
 # Needed to have c-style function-local vars with state.
-use feature 'state';	
+use feature 'state';    
 
 
 # ---------------- Globals ---------------- 
@@ -85,9 +85,9 @@ sub main()
 {
     my @files;
 
-	# ??: needs better description.
-	my @local_data;		# Contains all hashes and all other info
-						# stored in the system.
+    # ??: needs better description.
+    my @local_data;     # Contains all hashes and all other info
+                        # stored in the system.
 
 #    # Extract the first command line options, then remove it.
 #    foreach(@ARGV)
@@ -108,10 +108,10 @@ sub main()
     }
 
 
-	print "Parsing metafile/datafile stash.\n";
+    print "Parsing metafile/datafile stash.\n";
     @local_data = &read_stash();
-	&print_local_data_short(\@local_data);
-#	&print_local_data_long(\@local_data);
+    &print_local_data_short(\@local_data);
+#   &print_local_data_long(\@local_data);
 
     foreach (@files)
     {
@@ -126,82 +126,82 @@ sub process_email($)
     my $file_name = $_[0];
     my @local_data = @{$_[1]};
 
-	my $wrapper_h = &read_email_meta($file_name);
+    my $wrapper_h = &read_email_meta($file_name);
 
-	if ($wrapper_h == -1)
-	{
+    if ($wrapper_h == -1)
+    {
 #       &mail_back_no_txt($email);
-		warn "Error: Couldn't find any text in the email.\n";
-	   return;
+        warn "Error: Couldn't find any text in the email.\n";
+       return;
     }
-	elsif ($wrapper_h == -2)
-	{
-		warn "Error: No timecapsule markup in email.\n";
-		return;
-	}
-	elsif ($wrapper_h == -3)
-	{
-		warn "Error: Errors parsing timecapsule markup in email txt.\n";
-		return;
-	}
+    elsif ($wrapper_h == -2)
+    {
+        warn "Error: No timecapsule markup in email.\n";
+        return;
+    }
+    elsif ($wrapper_h == -3)
+    {
+        warn "Error: Errors parsing timecapsule markup in email txt.\n";
+        return;
+    }
 
 
-	my $tmp;
-##	$tmp = JSON::PP->new->utf8->encode($wrapper_h);
-#	print keys %{$wrapper_h} ."\n";
-#	print "> ". $wrapper_h ."\n";
-##	$tmp = JSON::PP->new->utf8->allow_nonref->pretty->encode(\%{$wrapper_h});
-#	%wrapper = %{$wrapper_h};
-#	$tmp = JSON::PP->new->utf8->allow_nonref->pretty->encode(\%wrapper);
-#	print "++ $tmp\n";
-	my %wrapper_hash = %{$wrapper_h};
+    my $tmp;
+##  $tmp = JSON::PP->new->utf8->encode($wrapper_h);
+#   print keys %{$wrapper_h} ."\n";
+#   print "> ". $wrapper_h ."\n";
+##  $tmp = JSON::PP->new->utf8->allow_nonref->pretty->encode(\%{$wrapper_h});
+#   %wrapper = %{$wrapper_h};
+#   $tmp = JSON::PP->new->utf8->allow_nonref->pretty->encode(\%wrapper);
+#   print "++ $tmp\n";
+    my %wrapper_hash = %{$wrapper_h};
 
 
-	if ($wrapper_hash{tag_info}{action})
-	{
-		if ($wrapper_hash{tag_info}{action} eq "add-content")
-		{
-			&stash_email($file_name, \%wrapper_hash, \@local_data);
-		}
-		elsif ($wrapper_hash{tag_info}{action} eq "get-content")
-		{
-			if ($wrapper_hash{tag_info}{id})
-			{
-				my $entry_id = $wrapper_hash{tag_info}{id};
-				$entry_to_send = &get_entry(\@local_data, $entry_id);
+    if ($wrapper_hash{tag_info}{action})
+    {
+        if ($wrapper_hash{tag_info}{action} eq "add-content")
+        {
+            &stash_email($file_name, \%wrapper_hash, \@local_data);
+        }
+        elsif ($wrapper_hash{tag_info}{action} eq "get-content")
+        {
+            if ($wrapper_hash{tag_info}{id})
+            {
+                my $entry_id = $wrapper_hash{tag_info}{id};
+                $entry_to_send = &get_entry(\@local_data, $entry_id);
 
-				my $recipient_email = $wrapper_hash{header_info}{From};
+                my $recipient_email = $wrapper_hash{header_info}{From};
 
-				unless ($entry_to_send)
-				{
-					warn "process_email() error: ".
-					"attempt to retrive nonexistant entry_id: $entry_id, by $recipient_email\n";
-					return undef;
-				}
+                unless ($entry_to_send)
+                {
+                    warn "process_email() error: ".
+                    "attempt to retrive nonexistant entry_id: $entry_id, by $recipient_email\n";
+                    return undef;
+                }
 
-				my $email_txt = &create_meta_and_attach_email($recipient_email, $entry_to_send);
-#				my $email_txt = &create_meta_email($recipient_email, $entry_to_send);
-#				my $email_txt = &create_attach_email($recipient_email, $entry_to_send);
+                my $email_txt = &create_meta_and_attach_email($recipient_email, $entry_to_send);
+#               my $email_txt = &create_meta_email($recipient_email, $entry_to_send);
+#               my $email_txt = &create_attach_email($recipient_email, $entry_to_send);
 
-				&send_email($email_txt);
-			}
-		}
-	}
-	else
-	{
-		warn "Warning: No valid action found in email. Ignoring.\n";
-	}	
+                &send_email($email_txt);
+            }
+        }
+    }
+    else
+    {
+        warn "Warning: No valid action found in email. Ignoring.\n";
+    }   
 
-	return 1;
+    return 1;
 }
 
 # Returns a entry for @local_data, or undef if there was problems 
 # parsing the email.
 #
-# returns:	\%wrapper_hash 
-#  			-1: Couldn't find any text in the email.
-#			-2: No timecapsule markup in email txt.
-#			-3: Errors parsing timecapsule markup in email txt.
+# returns:  \%wrapper_hash 
+#           -1: Couldn't find any text in the email.
+#           -2: No timecapsule markup in email txt.
+#           -3: Errors parsing timecapsule markup in email txt.
 sub read_email_meta($)
 {
     # Files
@@ -235,21 +235,21 @@ sub read_email_meta($)
 
     $email_txt = &get_email_txt($email);
     unless ($email_txt)
-    	{ return -1; }
+        { return -1; }
 
 
     $tag_info_ref = &parse_txt_for_meta_data($email_txt);
 
-	# Pass on any errors.
+    # Pass on any errors.
     if (!$tag_info_ref)
     { 
-    	if ($tag_info_ref == -1)
-			{ return $tag_info_ref; }
-    	elsif ($tag_info_ref == -2)
-			{ return $tag_info_ref; }
-		else
-			{ return -3; }
-	}
+        if ($tag_info_ref == -1)
+            { return $tag_info_ref; }
+        elsif ($tag_info_ref == -2)
+            { return $tag_info_ref; }
+        else
+            { return -3; }
+    }
  
     # ??: Maybe this should save the entire header, including optional fields.
     $header_info_ref{From} = $email->header("From");
@@ -261,9 +261,9 @@ sub read_email_meta($)
     # ??: header info shouldn't be needed. this could be confusing
     # ??: when a file has been adjusted multiple times.
     $wrapper_hash{tag_info} = $tag_info_ref;
-	$wrapper_hash{header_info} = \%header_info_ref;
+    $wrapper_hash{header_info} = \%header_info_ref;
 
-	return \%wrapper_hash;
+    return \%wrapper_hash;
 }
 
 
@@ -278,7 +278,7 @@ sub print_mime_tree($)
     my $file_txt;
 
 
-	# ??: !! Duplication of previous code. Bad+slow.
+    # ??: !! Duplication of previous code. Bad+slow.
     open FILE, "<", $file_name;
     {
     local $/ = undef;   # read all of file
@@ -288,7 +288,7 @@ sub print_mime_tree($)
 
     $email = Email::MIME->new($file_txt);
 
-	print $email->debug_structure() . "\n";
+    print $email->debug_structure() . "\n";
 }
 
 
@@ -302,8 +302,8 @@ sub stash_email($)
     my $mime_info_ref;
     my $bin_data;
 
-	# ??: !! Duplication of previous code. Bad+slow.
-	my $file_txt;
+    # ??: !! Duplication of previous code. Bad+slow.
+    my $file_txt;
     open FILE, "<", $file_name;
     {
     local $/ = undef;   # read all of file
@@ -323,13 +323,13 @@ sub stash_email($)
         return undef;
     }
 
-	# ??: very hacky.
+    # ??: very hacky.
     if ($email_attachm == -1)
-	{
-		$email_attachm = undef;
-	}
+    {
+        $email_attachm = undef;
+    }
 
-#	# ??: something like this should exist in the final version
+#   # ??: something like this should exist in the final version
 #    if ($email_attachm == -1)
 #    {
 #        #-1 for not attachments, 
@@ -342,78 +342,78 @@ sub stash_email($)
     $wrapper_hash{mime_info_ref} = $mime_info_ref;
     
     &save_hash_and_data_to_file(\%wrapper_hash, $bin_data);
-	&save_hash_to_local_vars(\%wrapper_hash, \@local_data);
+    &save_hash_to_local_vars(\%wrapper_hash, \@local_data);
 }
 
 # ================================================================
 
 sub read_stash()
 {
-	my @local_data;		# Contains all hashes and all other info
-						# stored in the system.
+    my @local_data;     # Contains all hashes and all other info
+                        # stored in the system.
 
 
-	my @dats = glob "$stash_dir/*.dat";
+    my @dats = glob "$stash_dir/*.dat";
 
-	for (@dats)
-	{
-		/(.+)\.dat/;
-		if (! -e "$1.meta")
-		{
-			print "Matching \"$1.meta\" does not exist for \"$1.dat\"\n"; 
-			print "skipping\n"; 
-		}
-	}
+    for (@dats)
+    {
+        /(.+)\.dat/;
+        if (! -e "$1.meta")
+        {
+            print "Matching \"$1.meta\" does not exist for \"$1.dat\"\n"; 
+            print "skipping\n"; 
+        }
+    }
 
-	my @metas = glob "$stash_dir/*.meta";
+    my @metas = glob "$stash_dir/*.meta";
 
-	# ??: should this check for missing .dat files (this would 
-	# ??: involve looking inside the extracted data structures) 
-	for (@metas)
-	{
-		# slurp.	
-		open FILE, "<", $_;
-		{
-		local $/ = undef;   # read all of file
-		$file_txt = <FILE>;
-		}
-		close FILE;
+    # ??: should this check for missing .dat files (this would 
+    # ??: involve looking inside the extracted data structures) 
+    for (@metas)
+    {
+        # slurp.    
+        open FILE, "<", $_;
+        {
+        local $/ = undef;   # read all of file
+        $file_txt = <FILE>;
+        }
+        close FILE;
 
-		# ??: in any final version this setup code should happen just once.
-		# Apparently this croaks on error, so i can't error check and skip over files.
-		my $wrapper_hash = JSON::PP->new->utf8->decode($file_txt);
+        # ??: in any final version this setup code should happen just once.
+        # Apparently this croaks on error, so i can't error check and skip over files.
+        my $wrapper_hash = JSON::PP->new->utf8->decode($file_txt);
 
-		push @local_data, $wrapper_hash;
-	}
+        push @local_data, $wrapper_hash;
+    }
 
-	return @local_data;
+    return @local_data;
 }
 
 
 sub print_local_data_short($)
 {
-	my @local_data = @{$_[0]};
-	
+    my @local_data = @{$_[0]};
+    
 
-	print "\n";
-	print "entries: \n"; 
-	for (@local_data)
-		{ print "    unique_id: ". $$_{db_info}{unique_id} ."\n"; }
-	print "\n";
-	print "number of local_data entries: ". @local_data. "\n";
-	print "\n";
+    print "\n";
+    print "entries: \n"; 
+    for (@local_data)
+        { print "    unique_id: ". $$_{db_info}{unique_id} ."\n"; }
+    print "\n";
+    print "number of local_data entries: ". @local_data. "\n";
+    print "\n";
 }
 
 
 sub print_local_data_long($)
 {
-	my @local_data = @{$_[0]};
-	
+    my @local_data = @{$_[0]};
+    
 
-	my $json_txt = JSON::PP->new->utf8->pretty->encode(\@local_data);
-	print "----------------------------------------------------------------\n";
-	print $json_txt."\n";
-	print "----------------------------------------------------------------\n";
+    my $json_txt = JSON::PP->new->utf8->pretty->encode(\@local_data);
+    print "----------------------------------------------------------------\n";
+    print $json_txt."\n";
+    print "----------------------------------------------------------------\n";
 }
 
 
@@ -512,11 +512,11 @@ sub get_email_attachment($)
         return -3;
     }
 
-	# Check for multipart/alternative, and multipart/mixed objects
-	# (which will be inlined at the top MIME level).
+    # Check for multipart/alternative, and multipart/mixed objects
+    # (which will be inlined at the top MIME level).
     for ( $email->subparts() )
     {
-		# Is it an attachement?
+        # Is it an attachement?
         unless (    $_->content_type =~ m{text/plain} ||
                     $_->content_type =~ m{text/html} ||
                     $_->content_type =~ m{multipart/.+} )
@@ -533,35 +533,35 @@ sub get_email_attachment($)
         }
     }
 
-	# Check for multipart/related objects and then check these for attachaments, 
-	# (which will be one level down in the MIME tree).
-	# ??: this has too many if/for levels. it should probably have some code 
-	# ??: shifted to a function.
+    # Check for multipart/related objects and then check these for attachaments, 
+    # (which will be one level down in the MIME tree).
+    # ??: this has too many if/for levels. it should probably have some code 
+    # ??: shifted to a function.
     for ( $email->subparts() )
     {
-		if ($_->content_type =~ m{multipart/related} )
-		{
-			my $mime_multi_related = $_;
+        if ($_->content_type =~ m{multipart/related} )
+        {
+            my $mime_multi_related = $_;
 
-			# Look for attachements.
-			for ( $mime_multi_related->subparts() )
-			{
-				unless (    $_->content_type =~ m{text/plain} ||
-							$_->content_type =~ m{text/html} ||
-							$_->content_type =~ m{multipart/.+} )
-				{
-					if ($attachment)
-					{
-						return -2; 
-					}
-					else
-					{
-						$attachment = $_; 
-					}
+            # Look for attachements.
+            for ( $mime_multi_related->subparts() )
+            {
+                unless (    $_->content_type =~ m{text/plain} ||
+                            $_->content_type =~ m{text/html} ||
+                            $_->content_type =~ m{multipart/.+} )
+                {
+                    if ($attachment)
+                    {
+                        return -2; 
+                    }
+                    else
+                    {
+                        $attachment = $_; 
+                    }
 
-				}
-			}
-		}
+                }
+            }
+        }
     }
 
 
@@ -593,12 +593,12 @@ sub get_email_attachment($)
 # ??: this would be easier to read and modify, and would work by reading a 
 # ??: char at a time, looking for :/\s/"/\/... flags.
 #
-# Returns:	\%hash
-# or 		-1:	there was text in the email but it was empty.
-#			-2:	there was text in the email but it doesn't have any <tag: "value"> 
-#			    pairs in it.
-#			-3:	got something not a tag (ie name:) while expecting a tag.
-#			-4:	last <tag: "value"> pair missing <"value">
+# Returns:  \%hash
+# or        -1: there was text in the email but it was empty.
+#           -2: there was text in the email but it doesn't have any <tag: "value"> 
+#               pairs in it.
+#           -3: got something not a tag (ie name:) while expecting a tag.
+#           -4: last <tag: "value"> pair missing <"value">
 sub parse_txt_for_meta_data($)
 {
     my $email_txt = $_[0];
@@ -609,15 +609,15 @@ sub parse_txt_for_meta_data($)
     my %hash;
 
 
-	# Empty file.
-	if ($email_txt =~ /^\s*$/)
-		{ return -1; }
+    # Empty file.
+    if ($email_txt =~ /^\s*$/)
+        { return -1; }
 
-	# Has text but no tags.
-	unless ($email_txt =~ /"/ and  $email_txt =~ /:/)
-		{ return -2; }
+    # Has text but no tags.
+    unless ($email_txt =~ /"/ and  $email_txt =~ /:/)
+        { return -2; }
 
-	# Search for tags, checking they're properly formed.
+    # Search for tags, checking they're properly formed.
 
     # Split the string on a " separator.
     @split_txt  = split('"', $email_txt, -1);
@@ -646,7 +646,7 @@ sub parse_txt_for_meta_data($)
             else
             {
                 # ??: should be debug printf here.
-				warn "Error: Expecting tag looking like <name:>. Got <$_>\n"; 
+                warn "Error: Expecting tag looking like <name:>. Got <$_>\n"; 
                 return -3; 
             }
  
@@ -673,7 +673,7 @@ sub parse_txt_for_meta_data($)
     if ($tag)
     {
         # ??: should be debug printf here.
-		warn "Error: last <tag: \"value\"> pair missing <\"value\">.\n";
+        warn "Error: last <tag: \"value\"> pair missing <\"value\">.\n";
         return -4;
     }
 
@@ -735,18 +735,18 @@ sub parse_mime_attachment($)
 {
     my $mime_obj = $_[0];
 
-	# ??: I think the fact that i'm storing a ref to something 
-	# ??: created with "my" might cause problems (like it's overwritten, 
-	# ??: or disappears when the function is called again). Can't 
-	# ??: remember though.
-	# ??: 
-	# ??: Data duplication: $hash{full}, $hash{splitup} have same basic data.
-	# ??: data. in a final version you should find a single way of 
-	# ??: accessing/saving data in one place.
+    # ??: I think the fact that i'm storing a ref to something 
+    # ??: created with "my" might cause problems (like it's overwritten, 
+    # ??: or disappears when the function is called again). Can't 
+    # ??: remember though.
+    # ??: 
+    # ??: Data duplication: $hash{full}, $hash{splitup} have same basic data.
+    # ??: data. in a final version you should find a single way of 
+    # ??: accessing/saving data in one place.
     my %hash;
 
- 	my %full_pairs;
-	my %splitup_pairs;
+    my %full_pairs;
+    my %splitup_pairs;
     $hash{full} = \%full_pairs;
     $hash{splitup} = \%splitup_pairs;
 
@@ -754,56 +754,56 @@ sub parse_mime_attachment($)
 
     for ($mime_obj->header_obj->header_names() )
     {
-		my $tag = $_;
+        my $tag = $_;
         my $value = $mime_obj->header($tag);
 
-		# Stash the Mime-field.
-		$hash{full}{$tag} = $value;
+        # Stash the Mime-field.
+        $hash{full}{$tag} = $value;
 
 
-		# Split the Mime-field into
+        # Split the Mime-field into
 
         # Simple form (no ;'s in string)
         if ($value =~ /^[^;]*$/)
         {
-			$hash{splitup}{$tag} = $value;
+            $hash{splitup}{$tag} = $value;
         }
         # complex form A: B; c=d; e="f"
         else
         {
-			@chunks = split(";", $value, -1);
+            @chunks = split(";", $value, -1);
 
-			# Store and remove the first attribute.
-			$hash{splitup}{$tag} = $chunks[0];
-        	splice(@chunks, 0, 1);
+            # Store and remove the first attribute.
+            $hash{splitup}{$tag} = $chunks[0];
+            splice(@chunks, 0, 1);
 
-			# Process the remainging a=b chunks.
-			for (@chunks)
-			{
-				# ??: there should be notes on these regexs.
-				if ( /^\s*(.+)=(.+)\s*$/ )
-				{
-					$hash{splitup}{$1} = $2;
-				}
-				elsif ( /^\s*(.+)="(.+)"\s*$/ )
-				{
-					$hash{splitup}{$1} = $2;
-				}
-				else
-				{
-					warn "invalid mime chunk: $_\n";
-					return undef;
-				}
-			}
+            # Process the remainging a=b chunks.
+            for (@chunks)
+            {
+                # ??: there should be notes on these regexs.
+                if ( /^\s*(.+)=(.+)\s*$/ )
+                {
+                    $hash{splitup}{$1} = $2;
+                }
+                elsif ( /^\s*(.+)="(.+)"\s*$/ )
+                {
+                    $hash{splitup}{$1} = $2;
+                }
+                else
+                {
+                    warn "invalid mime chunk: $_\n";
+                    return undef;
+                }
+            }
         }
     }
 
     # ??: this should really check for valid encoding types (such as base64) 
     # ??: rather than trusting the mime header.
-	# ??:
-	# ??: It also needs re-reading to consider whether there  should be checking
-	# ??: to see if the attachment is binary txt or readable txt (which should
-	# ??: adjust internal flags for the scalar).
+    # ??:
+    # ??: It also needs re-reading to consider whether there  should be checking
+    # ??: to see if the attachment is binary txt or readable txt (which should
+    # ??: adjust internal flags for the scalar).
 #    my $enc = $mime_obj->header("Content-Transfer-Encoding");
 #   $data = decode($enc, $mime_obj->body() );
     $data = $mime_obj->body();
@@ -817,41 +817,41 @@ sub parse_mime_attachment($)
 
 sub save_hash_and_data_to_file($$)
 {
-#	my \%wrapper_hash;
-	my $wrapper_hash = $_[0];
-	my $bin_data = $_[1];
+#   my \%wrapper_hash;
+    my $wrapper_hash = $_[0];
+    my $bin_data = $_[1];
 
-	my $metafile_name;
-	my $datfile_name;
-	my $unique_number;
-	
+    my $metafile_name;
+    my $datfile_name;
+    my $unique_number;
+    
 
-	($unique_number, $metafile_name, $datfile_name, ) = &unique_names();
-	print "Stashing email in: $metafile_name - $datfile_name\n";
+    ($unique_number, $metafile_name, $datfile_name, ) = &unique_names();
+    print "Stashing email in: $metafile_name - $datfile_name\n";
 
-	# Save the file info for later use.
-	$$wrapper_hash{db_info} = {
-		unique_id => $unique_number,
-		data_file => $datfile_name,
-		meta_file => $metafile_name,
-	};
+    # Save the file info for later use.
+    $$wrapper_hash{db_info} = {
+        unique_id => $unique_number,
+        data_file => $datfile_name,
+        meta_file => $metafile_name,
+    };
 
-	# Save the file
-	$json_txt = JSON::PP->new->utf8->pretty->encode($wrapper_hash);
+    # Save the file
+    $json_txt = JSON::PP->new->utf8->pretty->encode($wrapper_hash);
 
-#	print "------------------------------------------------------------\n";
-#	print $json_txt ;
-#	print "------------------------------------------------------------\n";
+#   print "------------------------------------------------------------\n";
+#   print $json_txt ;
+#   print "------------------------------------------------------------\n";
 
 
-	# Write the results out
-	open METAFILE, ">", "$metafile_name" or die "Couldn't open $metafile_name: $!";
-	print METAFILE $json_txt;
-	close METAFILE;
-	
-	open DATFILE, ">", "$datfile_name" or die "Couldn't open $datfile_name: $!";
-	print DATFILE $bin_data;
-	close DATFILE;
+    # Write the results out
+    open METAFILE, ">", "$metafile_name" or die "Couldn't open $metafile_name: $!";
+    print METAFILE $json_txt;
+    close METAFILE;
+    
+    open DATFILE, ">", "$datfile_name" or die "Couldn't open $datfile_name: $!";
+    print DATFILE $bin_data;
+    close DATFILE;
 
 
 }
@@ -859,59 +859,59 @@ sub save_hash_and_data_to_file($$)
 
 sub save_hash_to_local_vars($$)
 {
-	my %new_hash = %{$_[0]};
-	my @local_data = @{$_[1]};
+    my %new_hash = %{$_[0]};
+    my @local_data = @{$_[1]};
 
 
-	# Quickly check that the number is indeed unique.
-	for (@local_data)
-	{
-		if ($$_{db_info}{unique_id} eq $new_hash{db_info}{unique_id})
-		{
-			warn "save_hash_to_local_vars() error:" 
-				."entry %s already exits in \@local_data\n", $new_hash{db_info}{unique_id};
-			return
-		}
-	}
+    # Quickly check that the number is indeed unique.
+    for (@local_data)
+    {
+        if ($$_{db_info}{unique_id} eq $new_hash{db_info}{unique_id})
+        {
+            warn "save_hash_to_local_vars() error:" 
+                ."entry %s already exits in \@local_data\n", $new_hash{db_info}{unique_id};
+            return
+        }
+    }
 
-	# Cool, now save it.
-	push @local_data, \%new_hash;
+    # Cool, now save it.
+    push @local_data, \%new_hash;
 }
 
 
 # ??: obviously this is a point of failure. and needs re-reading.
 sub unique_names()
 {
-	state $current_number = 0;
+    state $current_number = 0;
 
-	my $datfile_name;
-	my $metafile_name;
+    my $datfile_name;
+    my $metafile_name;
 
 
-	# ??: there is no checking 
-	# ??: ie a 32 bit number.
-	while (1)
-	{
-		# ??: there is no checking for an overflow at FFFF,FFFF
-		# ??: ie a 32 bit number.
-		my $txt_number = sprintf("%08X", $current_number);
+    # ??: there is no checking 
+    # ??: ie a 32 bit number.
+    while (1)
+    {
+        # ??: there is no checking for an overflow at FFFF,FFFF
+        # ??: ie a 32 bit number.
+        my $txt_number = sprintf("%08X", $current_number);
 
-		$metafile_name = "$stash_dir/$txt_number.meta";
-		$datfile_name = "$stash_dir/$txt_number.dat";
+        $metafile_name = "$stash_dir/$txt_number.meta";
+        $datfile_name = "$stash_dir/$txt_number.dat";
 
-		# ??: this should be checked so that it finishes if it reaches 
-		# ??: some reasonable point.
-		unless (-e $metafile_name or -e $datfile_name)
-		{
-			return ($txt_number, $metafile_name, $datfile_name);
-		}
+        # ??: this should be checked so that it finishes if it reaches 
+        # ??: some reasonable point.
+        unless (-e $metafile_name or -e $datfile_name)
+        {
+            return ($txt_number, $metafile_name, $datfile_name);
+        }
 
-		$current_number++;
-	}
-	
-	# This should probably never be reached.
-	return (undef, undef);
-	
+        $current_number++;
+    }
+    
+    # This should probably never be reached.
+    return (undef, undef);
+    
 }
 
 
@@ -922,25 +922,25 @@ sub unique_names()
 # Returns a ref to the entry on success otherwise, undef.
 sub get_entry($$)
 {
-	my @local_data = @{$_[0]};
-	my $entry_name = $_[1];
+    my @local_data = @{$_[0]};
+    my $entry_name = $_[1];
 
-	
+    
 
 
-	# Quickly check that the number is indeed unique.
-	for (@local_data)
-	{
-		my %entry = %{$_};
+    # Quickly check that the number is indeed unique.
+    for (@local_data)
+    {
+        my %entry = %{$_};
 
-		if ($entry{db_info}{unique_id} eq $entry_name)
-		{
-			return \%entry;
-		}
-	}
+        if ($entry{db_info}{unique_id} eq $entry_name)
+        {
+            return \%entry;
+        }
+    }
 
-	warn "get_entry() error: couldn't find $entry_name in the \@local_data.\n";
-	return undef;
+    warn "get_entry() error: couldn't find $entry_name in the \@local_data.\n";
+    return undef;
 }
 
 
@@ -951,83 +951,83 @@ sub get_entry($$)
 # ??: !! from incoming messages.
 sub create_meta_and_attach_email($$)
 {
-	my $recipient_email = $_[0];
-	my %entry_to_send = %{$_[1]};
-#   	- %entry
-#		|	|-db_info: %db_info
-#		|	|			|-unique_id: "00001"
-#		|	|			|-data_file: "stash/00001.dat
-#		|	|			|-meta_file: "stash/00001.meta
-#		|	|
-#		|	|-mime_info_ref: \%mine_info_ref
-#		|	|	|-full: \%full
-#		|	|	|		|-ie-Content-Disposition : "attachment; filename=\"CV - Nacky Latorre.pdf\""
-#		|	|	|		...
-#		|	|	|-splitup: \%splitup
-#		|	|				|-ie-filename: "\"CV - Nacky Latorre.pdf\""
-#		|	|				|-ie-Content-Disposition: "attachment"
-#		|	|				...
-#		|	|-header_info: \%header_info
-#		|	|				|-ie-Subject: "Re: C.V.",
-#		|	|				...
-#		|	|-tag_info: \%tag_info
-#		|				|-ie-action: "save-doc"
-#		|				...
-#		|- %entry
-#		...
+    my $recipient_email = $_[0];
+    my %entry_to_send = %{$_[1]};
+#       - %entry
+#       |   |-db_info: %db_info
+#       |   |           |-unique_id: "00001"
+#       |   |           |-data_file: "stash/00001.dat
+#       |   |           |-meta_file: "stash/00001.meta
+#       |   |
+#       |   |-mime_info_ref: \%mine_info_ref
+#       |   |   |-full: \%full
+#       |   |   |       |-ie-Content-Disposition : "attachment; filename=\"CV - Nacky Latorre.pdf\""
+#       |   |   |       ...
+#       |   |   |-splitup: \%splitup
+#       |   |               |-ie-filename: "\"CV - Nacky Latorre.pdf\""
+#       |   |               |-ie-Content-Disposition: "attachment"
+#       |   |               ...
+#       |   |-header_info: \%header_info
+#       |   |               |-ie-Subject: "Re: C.V.",
+#       |   |               ...
+#       |   |-tag_info: \%tag_info
+#       |               |-ie-action: "save-doc"
+#       |               ...
+#       |- %entry
+#       ...
 
 
-	# Slurp, the attachment file.
-	my $attach_txt;
-	open FILE, "<", $entry_to_send{db_info}{data_file};
-	{
-	local $/ = undef;   # read all of file
-	$attach_txt = <FILE>;
-	}
-	close FILE;
-	$attach_txt = io( $entry_to_send{db_info}{data_file} )->all;
+    # Slurp, the attachment file.
+    my $attach_txt;
+    open FILE, "<", $entry_to_send{db_info}{data_file};
+    {
+    local $/ = undef;   # read all of file
+    $attach_txt = <FILE>;
+    }
+    close FILE;
+    $attach_txt = io( $entry_to_send{db_info}{data_file} )->all;
 
-	# Grab it's original flags, but make sure it's an attachment
-	#my %full_mime = $entry_to_send{mime_info_ref}{full};
-	#my %full_mime = $entry_to_send{mime_info_ref}{full};
-	# ??: I should probably worry about attachment vs inline at some point.
-#	$full_mime{Content-Disposition} = "attachment";
+    # Grab it's original flags, but make sure it's an attachment
+    #my %full_mime = $entry_to_send{mime_info_ref}{full};
+    #my %full_mime = $entry_to_send{mime_info_ref}{full};
+    # ??: I should probably worry about attachment vs inline at some point.
+#   $full_mime{Content-Disposition} = "attachment";
 
-	my %split_mime = %{$entry_to_send{mime_info_ref}{splitup}};
+    my %split_mime = %{$entry_to_send{mime_info_ref}{splitup}};
 
-	# multipart message
-	my $part1 = Email::MIME->create();
-#	my $part1 = Email::MIME->create(
-#			attributes => {
-#				if 
-#				filename     => "report.pdf",
-#				content_type => "application/pdf",
-#				encoding     => "quoted-printable",
-#				name         => "2004-financials.pdf",
-#			},
-#			body => io( "2004-financials.pdf" )->all,
-#		);
+    # multipart message
+    my $part1 = Email::MIME->create();
+#   my $part1 = Email::MIME->create(
+#           attributes => {
+#               if 
+#               filename     => "report.pdf",
+#               content_type => "application/pdf",
+#               encoding     => "quoted-printable",
+#               name         => "2004-financials.pdf",
+#           },
+#           body => io( "2004-financials.pdf" )->all,
+#       );
 
 
-	# ??: uuuuugh ugly.
-	my $mime_value;
-	$mime_value = $split_mime{"Content-Transfer-Encoding"};
+    # ??: uuuuugh ugly.
+    my $mime_value;
+    $mime_value = $split_mime{"Content-Transfer-Encoding"};
     $part1->encoding_set($mime_value) if $mime_value;
 
-	$mime_value = $split_mime{"Content-Disposition"};
+    $mime_value = $split_mime{"Content-Disposition"};
     $part1->disposition_set($mime_value) if $mime_value;
-	$mime_value = $split_mime{"filename"};
+    $mime_value = $split_mime{"filename"};
     $part1->filename_set($mime_value) if $mime_value;
 
-	$mime_value = $split_mime{"Content-Type"};
+    $mime_value = $split_mime{"Content-Type"};
     $part1->content_type_set($mime_value) if $mime_value;
-	$mime_value = $split_mime{"charset"};
+    $mime_value = $split_mime{"charset"};
     $part1->charset_set($mime_value) if $mime_value;
-	$mime_value = $split_mime{"format"};
+    $mime_value = $split_mime{"format"};
     $part1->format_set($mime_value) if $mime_value;
-	$mime_value = $split_mime{"name"};
+    $mime_value = $split_mime{"name"};
     $part1->name_set($mime_value) if $mime_value;
-	$mime_value = $split_mime{"boundry"};	# I think for multipart/*.
+    $mime_value = $split_mime{"boundry"};   # I think for multipart/*.
     $part1->boundary_set($mime_value) if $mime_value;
 
 # maybe MIME set:
@@ -1037,91 +1037,91 @@ sub create_meta_and_attach_email($$)
 #    * parts_add
 #    * header_str_set
 
-	$part1->body_set($attach_txt);
-#	$part1->body_str_set($attach_txt);
+    $part1->body_set($attach_txt);
+#   $part1->body_str_set($attach_txt);
 
 
-	my $part2 = Email::MIME->create(
-		attributes => {
-			content_type => "text/plain",
-			#encoding     => "utf-8",
-			encoding     => "7bit",
-			charset      => "us-ascii",
-			# disposition  => "flowed",
-			# ??: disposition  => "inline",
-			# ??: disposition  => "attachment",
-		},
-	);
+    my $part2 = Email::MIME->create(
+        attributes => {
+            content_type => "text/plain",
+            #encoding     => "utf-8",
+            encoding     => "7bit",
+            charset      => "us-ascii",
+            # disposition  => "flowed",
+            # ??: disposition  => "inline",
+            # ??: disposition  => "attachment",
+        },
+    );
 
-	my $body_txt;
-	$body_txt =  "-- This is an auto generated message from the time capsule server --\n";
-#	$body_txt .= "-- for helpe send a message to time.capsule.testin\@gmail.com     --\n";
-#	$body_txt .= "-- with this in the message body. action: \"help\"                --\n";
+    my $body_txt;
+    $body_txt =  "-- This is an auto generated message from the time capsule server --\n";
+#   $body_txt .= "-- for helpe send a message to time.capsule.testin\@gmail.com     --\n";
+#   $body_txt .= "-- with this in the message body. action: \"help\"                --\n";
 
-	my $tag_info = $entry_to_send{tag_info};	# Ref to %tag_info.
-	$body_txt .= JSON::PP->new->utf8->pretty->encode($tag_info);
+    my $tag_info = $entry_to_send{tag_info};    # Ref to %tag_info.
+    $body_txt .= JSON::PP->new->utf8->pretty->encode($tag_info);
 
-	$part2->body_set($body_txt );
-#	$part1->body_str_set($body_txt );
+    $part2->body_set($body_txt );
+#   $part1->body_str_set($body_txt );
 
 
-	my @parts = (
-		$part1,
-		$part2,
-	);
+    my @parts = (
+        $part1,
+        $part2,
+    );
 
-	my $email = Email::MIME->create(
-		header => [ 
-			To => $recipient_email,
-			From => "time.capsule.testing\@gmail.com",
-			Subject => 'Timecapsule_reply'
-#			# custom timecapsule header (prob best avoided).
-#			'TCNOTE' => 	"Auto generated by the timescapsule ".
-#					"server vers: TIMECAPSULE_SERVER_VERS,
-		],
-		parts  => [ @parts ],
-	);
-	
-	return $email->as_string();
+    my $email = Email::MIME->create(
+        header => [ 
+            To => $recipient_email,
+            From => "time.capsule.testing\@gmail.com",
+            Subject => 'Timecapsule_reply'
+#           # custom timecapsule header (prob best avoided).
+#           'TCNOTE' =>     "Auto generated by the timescapsule ".
+#                   "server vers: TIMECAPSULE_SERVER_VERS,
+        ],
+        parts  => [ @parts ],
+    );
+    
+    return $email->as_string();
 }
 
 
 # ??: !! See &create_meta_and_attach_email() for errors this inherits.
 sub send_meta($$)
 {
-	my $recipient_email = $_[0];
-	my %entry_to_send = {$_[1]};
+    my $recipient_email = $_[0];
+    my %entry_to_send = {$_[1]};
 
 
-	my $body_txt;
-	$body_txt =  "-- This is an auto generated message from the time capsule server --\n";
-	$body_txt .= "-- for helpe send a message to time.capsule.testing\@gmail.com     --\n";
-	$body_txt .= "-- with this in the message body. cmd: \"help\"                   --\n";
+    my $body_txt;
+    $body_txt =  "-- This is an auto generated message from the time capsule server --\n";
+    $body_txt .= "-- for helpe send a message to time.capsule.testing\@gmail.com     --\n";
+    $body_txt .= "-- with this in the message body. cmd: \"help\"                   --\n";
 
-	$body_txt .= JSON::PP->new->utf8->pretty->encode(\%entry_to_send);
+    $body_txt .= JSON::PP->new->utf8->pretty->encode(\%entry_to_send);
 
 
-	my $email = Email::MIME->create(
-		header => [ 
-			To => $recipient_email,
-			From => 'time.capsule.testing\@gmail.com',
-			Subject => 'Timecapsule_reply'
-#			# custom timecapsule header (prob best avoided).
-#			'TCNOTE' => 	"Auto generated by the timescapsule ".
-#					"server vers: TIMECAPSULE_SERVER_VERS,
-		],
-		attributes => {
-			content_type => "text/plain",
-			encoding     => "utf8",
-			charset      => "us-ascii",
-			# disposition  => "flowed",
-			# ??: disposition  => "inline",
-			# ??: disposition  => "attachment",
-		},
-		body => $body_txt,
-	);
+    my $email = Email::MIME->create(
+        header => [ 
+            To => $recipient_email,
+            From => 'time.capsule.testing\@gmail.com',
+            Subject => 'Timecapsule_reply'
+#           # custom timecapsule header (prob best avoided).
+#           'TCNOTE' =>     "Auto generated by the timescapsule ".
+#                   "server vers: TIMECAPSULE_SERVER_VERS,
+        ],
+        attributes => {
+            content_type => "text/plain",
+            encoding     => "utf8",
+            charset      => "us-ascii",
+            # disposition  => "flowed",
+            # ??: disposition  => "inline",
+            # ??: disposition  => "attachment",
+        },
+        body => $body_txt,
+    );
 
-	return $email->as_string();
+    return $email->as_string();
 }
 
 
@@ -1135,16 +1135,16 @@ sub send_meta($$)
 # Send the email using msmtp (similar to sendmail).
 sub send_email($)
 {
-	my $email_txt = $_[0];
+    my $email_txt = $_[0];
 
 
-	# Slurp, the attachment file.
-	open FILE, ">", "email_file.tmp";
-	print FILE $email_txt;
-	close FILE;
+    # Slurp, the attachment file.
+    open FILE, ">", "email_file.tmp";
+    print FILE $email_txt;
+    close FILE;
 
-	# ??: Should from address be groked from the email with --read-envelope-from?
-	system("cat email_file.tmp | msmtp --file=msmtp.timecap.conf --read-recipients");
-	system("rm -f email_file.tmp ");
+    # ??: Should from address be groked from the email with --read-envelope-from?
+    system("cat email_file.tmp | msmtp --file=msmtp.timecap.conf --read-recipients");
+    system("rm -f email_file.tmp ");
 
 }
