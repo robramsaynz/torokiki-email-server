@@ -1188,6 +1188,7 @@ sub stash_malformed_email($)
 
     my $stash_file = basename($file_name); 
     $stash_file = "error_stash/malformed/$stash_file";
+    print "Saving email to: $stash_file\n";
     copy($file_name, $stash_file) or warn "stash_malformed_email(): Copy failed: $!";
 }
 
@@ -1199,6 +1200,7 @@ sub stash_erroneous_email($)
 
     my $stash_file = basename($file_name); 
     $stash_file = "error_stash/erroneous/$stash_file";
+    print "Saving email to: $stash_file\n";
     copy($file_name, $stash_file) or warn "stash_erroneous_email(): Copy failed: $!";
 }
 
