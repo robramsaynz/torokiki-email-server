@@ -29,6 +29,20 @@
 # ??: !! 
 # ??: !! + Consider creating one encode/decode json object for speed.
 # ??: !! 
+# ??: !! + I need to consider exactly what text format the user can input.
+# ??: !! arrays? json vs custom markup? ...
+# ??: !! and then create parsers to just check that there isn't anything 
+# ??: !! that will be interpreted by the JSON parsers or other internal 
+# ??: !! functions, in the tags/values submitted by users.
+# ??: !! 
+# ??: !! + Add extra printing information as part of the stash/retrieve/...
+# ??: !! process so that an admin can see what's going on. 
+# ??: !! This should include the extra notes on this scattered around my 
+# ??: !! code. As well as:
+# ??: !!    - print "action: ..."
+# ??: !!    - print email-address
+# ??: !!    - print stash-id on storage (and other actions too prob).
+# ??: !! 
 
 
 #   -------- Data strucutres --------
@@ -63,6 +77,8 @@ use Email::MIME;
 #use Encode;
 use JSON::PP;
 use IO::All;
+use File::Copy;
+use File::Basename;
 
 # Needed to have c-style function-local vars with state.
 use feature 'state';    
@@ -118,6 +134,8 @@ sub main()
         &process_email($_, \@local_data);
     }
 
+    # In case the last print didn't include a \n.
+    print "\n";
 }
 
 sub process_email($)
@@ -132,17 +150,20 @@ sub process_email($)
     {
 #       &mail_back_no_txt($email);
         warn "Error: Couldn't find any text in the email.\n";
-       return;
+        &stash_malformed_email($file_name);
+        return undef;
     }
     elsif ($wrapper_h == -2)
     {
         warn "Error: No timecapsule markup in email.\n";
-        return;
+        &stash_malformed_email($file_name);
+        return undef;
     }
     elsif ($wrapper_h == -3)
     {
         warn "Error: Errors parsing timecapsule markup in email txt.\n";
-        return;
+        &stash_malformed_email($file_name);
+        return undef;
     }
 
 
@@ -176,6 +197,7 @@ sub process_email($)
                 {
                     warn "process_email() error: ".
                     "attempt to retrive nonexistant entry_id: $entry_id, by $recipient_email\n";
+                    &stash_erroneous_email($file_name);
                     return undef;
                 }
 
@@ -190,6 +212,8 @@ sub process_email($)
     else
     {
         warn "Warning: No valid action found in email. Ignoring.\n";
+        &stash_erroneous_email($file_name);
+        return undef;
     }   
 
     return 1;
@@ -318,24 +342,17 @@ sub stash_email($)
 
     if ($email_attachm == -2)
     {
-        # returns -2 for more than one attachment, 
+        warn "stash_email(): Aborted. More than one attachent in email.\n";
         &mail_back_too_many_attachments($email);
         return undef;
     }
 
-    # ??: very hacky.
     if ($email_attachm == -1)
     {
-        $email_attachm = undef;
+        warn "stash_email(): Aborted. No attachent in email.\n";
+        &mail_back_no_attachments($email);
+        return undef;
     }
-
-#   # ??: something like this should exist in the final version
-#    if ($email_attachm == -1)
-#    {
-#        #-1 for not attachments, 
-#        &mail_back_no_attachments($email);
-#        return undef;
-#    }
 
     ($mime_info_ref, $bin_data) = &parse_mime_attachment($email_attachm);
 
@@ -657,7 +674,7 @@ sub parse_txt_for_meta_data($)
             # be inserted and the next $_ is also part of the value.
             if (/\\$/)
             { 
-                $value = $value . $_. "\"" ;
+                $value = $value . $_ . "\"" ;
             }
             else
             {
@@ -708,8 +725,7 @@ sub mail_back_no_attachments($)
 {
     my $email = $_[0];
 
-    # ??: Needs replacing with something proper.
-    warn "no attachent in email\n";
+    # ??: Needs payload.
 }
 
 
@@ -717,8 +733,7 @@ sub mail_back_too_many_attachments($)
 {
     my $email = $_[0];
 
-    # ??: Needs replacing with something proper.
-    warn "more than one attachent in email\n";
+    # ??: Needs payload.
 }
 
 
@@ -1059,6 +1074,9 @@ sub create_meta_and_attach_email($$)
 #   $body_txt .= "-- with this in the message body. action: \"help\"                --\n";
 
     my $tag_info = $entry_to_send{tag_info};    # Ref to %tag_info.
+    my $json_tmp = JSON::PP->new->utf8->pretty->encode($tag_info);
+    $json_tmp = &remove_superfl_json_markup($json_tmp);
+    
     $body_txt .= JSON::PP->new->utf8->pretty->encode($tag_info);
 
     $part2->body_set($body_txt );
@@ -1083,6 +1101,19 @@ sub create_meta_and_attach_email($$)
     );
     
     return $email->as_string();
+}
+
+
+# takes a string such as { "tag" = "", }
+# and removes the superfluous markup. This includes the 
+# hash notation {}, the "s arount tag, and the =
+sub remove_superfl_json_markup($)
+{
+    my $json_txt = $_[0];
+
+#    @split_txt  = split('"', $json_txt, -1);
+    
+    return $json_txt;
 }
 
 
@@ -1148,3 +1179,26 @@ sub send_email($)
     system("rm -f email_file.tmp ");
 
 }
+
+
+sub stash_malformed_email($)
+{
+    my $file_name = $_[0];
+
+
+    my $stash_file = basename($file_name); 
+    $stash_file = "error_stash/malformed/$stash_file";
+    copy($file_name, $stash_file) or warn "stash_malformed_email(): Copy failed: $!";
+}
+
+
+sub stash_erroneous_email($)
+{
+    my $file_name = $_[0];
+
+
+    my $stash_file = basename($file_name); 
+    $stash_file = "error_stash/erroneous/$stash_file";
+    copy($file_name, $stash_file) or warn "stash_erroneous_email(): Copy failed: $!";
+}
+
