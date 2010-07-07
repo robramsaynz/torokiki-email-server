@@ -1157,10 +1157,35 @@ sub send_meta($$)
 
 
 
+#sub send_add_content_confirmation()
+#{
+## ??: I'm not sure if this should use filename in preference to name,
+## ??: or vise versa.
+#if ( $tag{SOMETHING}{SOMETHING}{filename} )
+#{
+#	$name = $tag{SOMETHING}{SOMETHING}{filename};
+#}
+#elsif ( $tag{SOMETHING}{SOMETHING}{name} )
+#{
+#	$name = $tag{SOMETHING}{SOMETHING}{name};
+#}
+#else
+#{
+# 	$name = "no filename supplied with file";
+#}
+#
+# $id = $tag{SOMETHING}{SOMETHING}{id};
+#
+# $x = "---- Torokiki mailserver SOMETHING SOMETHING ----\n";
+# $x = "comment: \"Cool potatos: your message has been saved to the Torokiki data base.\"\n";
+# $x = "comment: \"your file <$name> has been saved with id <$id>\"\n";
+#
+#}
+
+
 #sub send_attach()
 #{
 #}
-
 
 
 # Send the email using msmtp (similar to sendmail).
