@@ -1111,8 +1111,71 @@ sub remove_superfl_json_markup($)
 {
     my $json_txt = $_[0];
 
-#    @split_txt  = split('"', $json_txt, -1);
-    
+##    @split_txt  = split('"', $json_txt, -1);
+#    @chars = split('', $json_txt);
+#	my $state = "before-tag";
+#	for (@chars)
+#	{
+#		if ($state eq "before-tag")
+#		{	
+#			if
+#			{
+#				$state = "in-tag";
+#			}
+#			else
+#			{
+#			}
+#		}
+#		elsif ($state eq "in-tag")
+#		{	
+#			if
+#			{
+#				$state = "before-value";
+#			}
+#			else
+#			{
+#			}
+#		}
+#		elsif ($state eq "before-value")
+#		{	
+#			if
+#			{
+#			$state = "in-value";
+#			}
+#			else
+#			{
+#			}
+#		}
+#		elsif ($state eq "in-value") 
+#		{	
+#			if
+#			{
+#				$state = "before-tag";
+#			}
+#			else
+#			{
+#			}
+#		}
+#		else
+#		{
+#			print "parsing error\n";
+#		}
+#	}
+
+## Print tags/values.
+## Outside tags/values only white-space and colons are printed.
+#if ( $x eq "before-tag" | $x eq "before-value")
+#{
+##	unles ($char =~ /\s|:/)
+#	{
+#	}
+#}
+#else
+#{ 
+#	print $char;
+#}
+#
+
     return $json_txt;
 }
 
