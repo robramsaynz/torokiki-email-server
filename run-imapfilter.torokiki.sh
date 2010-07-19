@@ -11,6 +11,6 @@
 
 while (true)
 do
-	imapfilter -c imapfilter.timecap.conf
+	imapfilter -c imapfilter.torokiki.conf
 	sleep 10
 done
