@@ -26,10 +26,10 @@ our @EXPORT_OK	= qw(
 
 our @EXPORT		= qw(
 	send_mailserv_obj_to_torokiki_server
-	convert_mailserv_obj_to_api_obj
 	send_api_obj_to_torokiki_server
 	get_content_from_torokiki_server
-	convert_api_obj_to_mailserv_obj
+
+	convert_mailserv_obj_to_api_obj
 );
 
 our $VERSION=0.10;
@@ -43,6 +43,8 @@ use LWP::UserAgent;
 use HTTP::Request::Common;
 #use HTTP::Response;
 use JSON::PP;
+use MIME::Base64;
+#use MIME::Base64::Per; # (Pure Perl version)
 
 
 # !! this const is also declared in other files (ie data-dupl.)
@@ -150,6 +152,13 @@ sub convert_mailserv_obj_to_api_obj
 			'id' 		=> $mailserv_obj{db_info}{unique_id},
 	};
 
+
+	# Convert "fart bums old-things" to [ 'fart', 'bums', 'old-things' ]
+	my $tags = $mailserv_obj{tag_info}{Tags} || $mailserv_obj{tag_info}{tags} || "";
+	my @tags = split(/\s+/, $tags);
+	$api_obj->{Tags} = \@tags;
+
+
 	# Slurp the file
 	my $file_txt;
 	my $file_name = $mailserv_obj{db_info}{data_file};
@@ -160,8 +169,8 @@ sub convert_mailserv_obj_to_api_obj
     }
     close FILE;
 
-#	# Save as base64 to the api_obj.
-#	$api_obj{Attachment}{data} = somethign($file_txt);
+	# Read data file into as base64 string.
+	$api_obj->{Attachment}->{data} = encode_base64($file_txt);
 
 
 	return (1 , $api_obj);
@@ -205,7 +214,7 @@ warn ">2\n";
 }
 warn ">3\n";
 	my $code = $response->code();
-	if ($code =~ /3??/)
+	if ($code =~ /301/)
 	{
 		return ( 1, $response->header("Location") );
 	}
@@ -221,7 +230,7 @@ warn ">3\n";
 		# !! Check how errors are raised elsewhere. is this consistent?
 		warn	"Error on http push request to $serv_sett{server}$serv_sett{cont_loc}\n";
 				"Server returned error: ".$reponse->status_line()."\n" .
-				"In theory only 3xx/4xx/5xx errors should be returned by a torokiki server!\n";
+				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!\n";
 		return (undef, "unknown http error");
 	}
 }
@@ -269,7 +278,53 @@ if (undef){
 }
 
 
-sub convert_api_obj_to_mailserv_obj($)
-{
-}
+## !! This is not not finished functional, and probably can't be
+## !! untill the mailserve-object format is update to properly 
+## !! match the api-object.
+## !! 
+## !! Note the use of the an new field in the mailserv-objects:
+## !! 	$api_obj->{db_info}->{created_by}
+#sub convert_api_obj_to_mailserv_obj($)
+#{
+#	my $api_obj = $_[0];
+#    my @local_data = @{$_[1]};
+#
+#
+#	my $mailserv_obj = undef;
+#
+#	if ($api_obj->{APICaller}->{service} eq 'Robs email thing')
+#	{
+#		# Search for a copy of the object in the local cache.
+#		for (@local_data)
+#		{
+#			if ($_->{db_info}->{unique_id} eq $api_obj->{APICaller}->{id}) 
+#			{ 
+#				$mailserv_obj = $_;
+#				last; 
+#			}
+#		}
+#
+#		if ($mailserv_obj)
+#		{
+#			$api_obj->{db_info}->{created_by} = "updated from api-object";
+#
+#			$mailserv_obj->{tag_info}->{action} = 
+#			$mailserv_obj->{tag_info}->{type} = 
+#			$mailserv_obj->{tag_info}->{tags} = 
+#			$mailserv_obj->{tag_info}->{description} = 
+#
+#			return (1 , $mailserv_obj);
+#		}
+#		else
+#		{
+#			return (undef , "updating non-existnent mailserver-object from api-object. ");
+#		}	
+#	}
+#	else
+#	{
+#		return (undef , "can't create new mailserver-object from api-object ");
+#		$api_obj->{db_info}->{created_by} = "created from api-object";
+#	};
+#
+#}
 
