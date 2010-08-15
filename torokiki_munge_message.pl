@@ -56,10 +56,10 @@
 #       |   |
 #       |   |-mime_info_ref: \%mine_info_ref
 #       |   |   |-full: \%full
-#       |   |   |       |-ie-Content-Disposition : "attachment; filename=\"CV - Nacky Latorre.pdf\""
+#       |   |   |       |-ie-Content-Disposition : "attachment; filename=\"image 1.jpg\""
 #       |   |   |       ...
 #       |   |   |-splitup: \%splitup
-#       |   |               |-ie-filename: "\"CV - Nacky Latorre.pdf\""
+#       |   |               |-ie-filename: "\"image 1.jpg\""
 #       |   |               |-ie-Content-Disposition: "attachment"
 #       |   |               ...
 #       |   |-header_info: \%header_info
@@ -813,6 +813,21 @@ sub parse_mime_attachment($)
             }
         }
     }
+
+
+	# name="somename" filename="somename" get stored as "\"somename\"".
+	# Fix this by removing leadign and trailing"s.
+   	if ( $hash{splitup}{filename} )
+	{ 
+			$hash{splitup}{name} =~ s/^"//;
+			$hash{splitup}{name} =~ s/"$//;
+	}
+   	if ( $hash{splitup}{name} }
+	{ 
+			$hash{splitup}{name} =~ s/^"//;
+			$hash{splitup}{name} =~ s/"$//;
+	}
+
 
     # ??: this should really check for valid encoding types (such as base64) 
     # ??: rather than trusting the mime header.

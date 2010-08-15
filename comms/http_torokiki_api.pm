@@ -56,8 +56,12 @@ sub send_mailserv_obj_to_torokiki_server($)
 	my $mailserv_obj = $_[0];
 print "I'm alive\n";
 
-	my $api_obj = &convert_mailserv_obj_to_api_obj($mailserv_obj);
-	return &send_api_obj_to_torokiki_server($api_obj);
+	my ($err, $api_obj) = &convert_mailserv_obj_to_api_obj($mailserv_obj);
+
+	if ($err)
+		{ return &send_api_obj_to_torokiki_server($api_obj); }
+	else
+		{ return undef; }
 }
 
 
@@ -95,7 +99,7 @@ sub convert_mailserv_obj_to_api_obj
 #	   },
 #	   "mime_info_ref" => {
 #		  "splitup" => {
-#			 "filename" => "\"5.jpeg\"",
+#			 "filename" => ""5.jpeg"",
 #			 "Content-Type" => "image/jpeg",
 #			 "Content-Disposition" => "attachment",
 #			 "Content-Transfer-Encoding" => "base64"
@@ -120,14 +124,20 @@ sub convert_mailserv_obj_to_api_obj
 #	};
 
 
-   	if ($mailserv_obj{tag_info}{type} ne "image" && $mailserv_obj{tag_info}{type} ne "Image")
+	# !! This is essentially doing email-verification, and should be done elsewhere
+	# !! This should be replaced when I fix up my mailserv_obj to reflect the torokiki api.
+   	if ($mailserv_obj->{tag_info}->{type} ne "image" && $mailserv_obj->{tag_info}->{type} ne "Image")
 	{
-		return (undef, "I only save image objects and <$mailserv_obj{tag_info}{type}> was supplied");
+		warn "I only save image objects and <$mailserv_obj{tag_info}{type}> was supplied.";
+		return (undef, "non image objects was supplied");
 	}
 
-   	if ($mailserv_obj{tag_info}{InspiredBy} ne "image" && $mailserv_obj{tag_info}{inspiredby} ne "Image")
+	# !! This is essentially doing email-verification, and should be done elsewhere
+	# !! This should be replaced when I fix up my mailserv_obj to reflect the torokiki api.
+   	if ( $mailserv_obj->{tag_info}->{InspiredBy} eq undef && $mailserv_obj->{tag_info}->{inspiredby} eq undef )
 	{
-		return (undef, "No InspiredBy tag! A torokiki object must be in response to an image."); 
+		warn "No InspiredBy tag! A torokiki object must be in response to an image.";
+		return (undef, "no InspiredBy tag"); 
 	}
 	
 	# !! There should prob be more formalised checking for valid syntax, such as 
@@ -135,33 +145,34 @@ sub convert_mailserv_obj_to_api_obj
 
 	my $api_obj = 
 	{
-		'Submitter' 	=> $mailserv_obj{header_info}{From},
-		'Text'			=> $mailserv_obj{tag_info}{description},
+		'Submitter' 	=> $mailserv_obj->{header_info}->{From},
+		'Text'			=> $mailserv_obj->{tag_info}->{description},
 #    	'Tags' 			: [ 'fart', 'bums', 'old-things' ],
-		'InspiredBy'	=> $mailserv_obj{tag_info}{InspiredBy} || $mailserv_obj{tag_info}{inspiredby};
+		'InspiredBy'	=> $mailserv_obj->{tag_info}->{InspiredBy} || $mailserv_obj->{tag_info}->{inspiredby},
 						# ie 'http://torokiki.net/image/123/response/456',
-		'Location'		=> $mailserv_obj{tag_info}{Location} || $mailserv_obj{tag_info}{location} || "";
+		'Location'		=> $mailserv_obj->{tag_info}->{Location} || $mailserv_obj->{tag_info}->{location} || "",
 						# ie '123 Some Street, Suburb',
 
 		'Attachment' => {
-			'name' => $mailserv_obj{mime_info_ref}{splitup}{filename},
+			'name' => $mailserv_obj->{mime_info_ref}->{splitup}{filename},
 #			'data' => 'AJKAHLKUSHDJKLFHJKDLSHFGKJSDLKSFHSDFKLJSDHKFLHDJKSLFHKSDLFSD',
 		},
 		'APICaller' => {
 			'service'	=> "Torokiki Mailserver ".TOROKIKI_SERVER_VERS,
-			'id' 		=> $mailserv_obj{db_info}{unique_id},
+			'id' 		=> $mailserv_obj->{db_info}->{unique_id},
+		}
 	};
 
 
 	# Convert "fart bums old-things" to [ 'fart', 'bums', 'old-things' ]
-	my $tags = $mailserv_obj{tag_info}{Tags} || $mailserv_obj{tag_info}{tags} || "";
+	my $tags = $mailserv_obj->{tag_info}->{Tags} || $mailserv_obj->{tag_info}->{tags} || "";
 	my @tags = split(/\s+/, $tags);
 	$api_obj->{Tags} = \@tags;
 
 
 	# Slurp the file
 	my $file_txt;
-	my $file_name = $mailserv_obj{db_info}{data_file};
+	my $file_name = $mailserv_obj->{db_info}->{data_file};
 	open FILE, "<", $file_name;
     {
     local $/ = undef;   # read all of file
@@ -192,7 +203,10 @@ sub send_api_obj_to_torokiki_server($)
 
 warn ">1\n";
 	# Convert to a JSON string.
-	my $api_obj_as_txt = JSON::PP->new->utf8->pretty->encode($api_obj);
+	my $api_obj_as_txt = JSON::PP->new->allow_nonref->utf8->pretty->encode($api_obj);
+warn "---- \$api_obj_as_txt ----\n";
+warn "$api_obj_as_txt\n";
+warn "--------------------------------\n";
 
 	# Send to server via http.
 	#use HTTP::Request::Common;
@@ -221,16 +235,16 @@ warn ">3\n";
 	elsif ($code =~ /5??/ && $code =~ /4??/)
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http push request to $serv_sett{server}$serv_sett{cont_loc}\n";
+		warn	"Error on http push request to $serv_sett{server}$serv_sett{cont_loc}\n".
 				"Server returned error: ".$reponse->status_line()."\n";
 		return (undef, "http error");
 	}
 	else
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http push request to $serv_sett{server}$serv_sett{cont_loc}\n";
+		warn	"Error on http push request to $serv_sett{server}$serv_sett{cont_loc}\n".
 				"Server returned error: ".$reponse->status_line()."\n" .
-				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!\n";
+				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!";
 		return (undef, "unknown http error");
 	}
 }
@@ -271,8 +285,8 @@ if (undef){
 	else
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http get request to $serv_sett{server}$serv_sett{cont_loc}\n";
-				"Expecting 200. Server returned error: ".$reponse->status_line()."\n" .
+		warn	"Error on http get request to $serv_sett{server}$serv_sett{cont_loc}\n".
+				"Expecting 200. Server returned error: ".$reponse->status_line();
 		return (-2, "http error");
 	}
 }

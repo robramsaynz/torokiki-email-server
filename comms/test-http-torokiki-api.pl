@@ -26,7 +26,7 @@ sub return_regular_stash_object()
 	   },
 	   "mime_info_ref" => {
 		  "splitup" => {
-			 "filename" => "\"5.jpeg\"",
+			 "filename" => "5.jpeg",
 			 "Content-Type" => "image/jpeg",
 			 "Content-Disposition" => "attachment",
 			 "Content-Transfer-Encoding" => "base64"
@@ -57,8 +57,14 @@ sub return_regular_stash_object()
 sub main()
 {
 
-	$obj = &return_regular_stash_object();
-	my ($err, $val) = &send_mailserv_obj_to_torokiki_server($obj);
+	$mailserv_obj = &return_regular_stash_object();
+
+	# !! dirty hack caused by mailserv_obj and api_obj being too 
+	# !! different.
+	# !! This should be replaced when I fix up my mailserv_obj to reflect the torokiki api.
+	$mailserv_obj->{tag_info}->{InspiredBy} = "http://torokiki.net/image/123/response/456";
+
+	my ($err, $val) = &send_mailserv_obj_to_torokiki_server($mailserv_obj);
 
 	if ($err) 
 	{
