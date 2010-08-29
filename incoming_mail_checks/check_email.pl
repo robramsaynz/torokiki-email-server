@@ -6,27 +6,6 @@ require 'parse_email.pl';
 require 'mime_walking.pl';
 
 
-
-# ==== Package setup. ====
-
-package incoming_mail_checks::parse_email;
-
-#use strict;
-require Exporter;
-our @ISA = qw(Exporter);
-
-our @EXPORT_OK	= qw(
-);
-
-our @EXPORT		= qw(
-);
-
-our $VERSION=0.10;
-
-
-
-# ==== Module starts here. ====
-
 sub is_valid_email($)
 {
 	my $eml_mime = $[0];
