@@ -80,6 +80,9 @@ use IO::All;
 use File::Copy;
 use File::Basename;
 
+use incoming_mail_checks::parse_email;
+#use comms::http_torokiki_api;
+
 # Needed to have c-style function-local vars with state.
 use feature 'state';    
 
@@ -145,27 +148,29 @@ sub process_email($)
     my $file_name = $_[0];
     my @local_data = @{$_[1]};
 
-    my $wrapper_h = &read_email_meta($file_name);
 
-    if ($wrapper_h == -1)
+	
+	# Read
+    open FILE, "<", $file_name;
     {
-#       &mail_back_no_txt($email);
-        warn "Error: Couldn't find any text in the email.\n";
-        &stash_malformed_email($file_name);
-        return undef;
+    local $/ = undef;   # read all of file
+    $email_txt = <FILE>;
     }
-    elsif ($wrapper_h == -2)
-    {
-        warn "Error: No Torokiki Mailserver markup in email.\n";
+    close FILE;
+
+    $email_mime = Email::MIME->new($email_txt);
+
+	# Validate
+	if (! &parse_email::is_valid_email($email_mime) )
+	{
         &stash_malformed_email($file_name);
-        return undef;
-    }
-    elsif ($wrapper_h == -3)
-    {
-        warn "Error: Errors parsing Torokiki Mailserver markup in email txt.\n";
-        &stash_malformed_email($file_name);
-        return undef;
-    }
+	}
+
+	# Munge
+#    my $wrapper_h = &read_email_meta($file_name);
+
+	# Process
+
 
 
     my $tmp;
@@ -247,15 +252,6 @@ sub read_email_meta($)
     my $header_info_ref;
 
 
-    open FILE, "<", $file_name;
-    {
-    local $/ = undef;   # read all of file
-    $file_txt = <FILE>;
-    }
-    close FILE;
-
-    $email = Email::MIME->new($file_txt);
-    $header = $email->header_obj();
 
 
     $email_txt = &get_email_txt($email);
@@ -613,7 +609,7 @@ sub get_email_attachment($)
 #
 # Returns:  \%hash
 # or        -1: there was text in the email but it was empty.
-#           -2: there was text in the email but it doesn't have any <tag: "value"> 
+#           -2: there was text in the e[]()mail but it doesn't have any <tag: "value"> 
 #               pairs in it.
 #           -3: got something not a tag (ie name:) while expecting a tag.
 #           -4: last <tag: "value"> pair missing <"value">
