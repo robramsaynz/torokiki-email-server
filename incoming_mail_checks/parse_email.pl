@@ -5,9 +5,9 @@
 
 # See http://torokiki.net/docs/mailserver-command-spec.md for a description 
 # of what a help message looks like.
-sub is_help_message($)
+sub incoming_mail_checks::incoming_mail_checks::is_help_message($)
 {
-	my $eml_mime = $[0];
+	my $eml_mime = $_[0];
 
 
     my $subj = $eml_mime->header("Subject");
@@ -36,7 +36,7 @@ sub is_help_message($)
 
 # Extract email txt from the email assuming 
 # Takes a pointer to the main Email::MIME node.
-sub get_email_txt($)
+sub incoming_mail_checks::incoming_mail_checks::get_email_txt($)
 {
     my $eml_mime = $_[0];
 
@@ -79,7 +79,7 @@ sub get_email_txt($)
 }
 
 
-sub convert_html_email_to_txt($)
+sub incoming_mail_checks::convert_html_email_to_txt($)
 {
     $eml_mime = $_[0];
 
@@ -106,7 +106,7 @@ sub convert_html_email_to_txt($)
 # Returns:  \%hash
 #           -1: got something not a tag (ie name:) while expecting a tag.
 #           -2: last <tag: "value"> pair missing <"value">
-sub tag_value_pairs_to_hash($)
+sub incoming_mail_checks::tag_value_pairs_to_hash($)
 {
     my $email_txt = $_[0];
 
@@ -178,3 +178,4 @@ sub tag_value_pairs_to_hash($)
 }
 
 
+1;

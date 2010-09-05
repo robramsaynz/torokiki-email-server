@@ -75,6 +75,7 @@ sub convert_mailserv_obj_to_api_obj
 #    'Text' : 'This is a text response',
 #    'Tags' : [ 'fart', 'bums', 'old-things' ],
 #    'InspiredBy' : 'http://torokiki.net/image/123/response/456',
+#    'Objective: 'What do people wear?',
 #    'Location' : '123 Some Street, Suburb',
 #    'Attachment': {
 #        'name' : 'my-file.png',
@@ -150,6 +151,8 @@ sub convert_mailserv_obj_to_api_obj
 #    	'Tags' 			: [ 'fart', 'bums', 'old-things' ],
 		'InspiredBy'	=> $mailserv_obj->{tag_info}->{InspiredBy} || $mailserv_obj->{tag_info}->{inspiredby},
 						# ie 'http://torokiki.net/image/123/response/456',
+		'Objective'		=> $mailserv_obj->{tag_info}->{Objective} || $mailserv_obj->{tag_info}->{objective},
+						# ie 'What do people wear?',
 		'Location'		=> $mailserv_obj->{tag_info}->{Location} || $mailserv_obj->{tag_info}->{location} || "",
 						# ie '123 Some Street, Suburb',
 

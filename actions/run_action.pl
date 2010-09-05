@@ -8,9 +8,9 @@ require 'help.pl';
 require '../incoming_mail_checks/parse_email.pl';
 
 
-sub run_action($)
+sub actions::run_action($)
 {
-	my $eml_mime = $[0];
+	my $eml_mime = $_[0];
 
 
 	# The help message has different syntax to the rest of the system
@@ -20,13 +20,13 @@ sub run_action($)
 	}
 
 
-    my $_ = $eml_mime->header("Subject");
+    $_ = $eml_mime->header("Subject");
 
-	if ( /^get:/ )
+	if ( /^get:/i )
 	{ 
 		return &run_get_cmd($eml_mime);
 	}
-	elsif ( /^create-response-to:/ )
+	elsif ( /^create-response-to:/i )
 	{ 
 		return &run_create_response_to_cmd($eml_mime);
 	}

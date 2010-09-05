@@ -80,8 +80,11 @@ use IO::All;
 use File::Copy;
 use File::Basename;
 
-use incoming_mail_checks::parse_email;
+require 'incoming_mail_checks/check_email.pl';
+require 'incoming_mail_checks/check_email.pl';
+require 'get_data_from_command/parse_email_for_data.pl';
 #use comms::http_torokiki_api;
+require 'actions/run_action.pl';
 
 # Needed to have c-style function-local vars with state.
 use feature 'state';    
@@ -154,23 +157,24 @@ sub process_email($)
     open FILE, "<", $file_name;
     {
     local $/ = undef;   # read all of file
-    $email_txt = <FILE>;
+    my $eml_txt = <FILE>;
     }
     close FILE;
 
-    $email_mime = Email::MIME->new($email_txt);
+    my $eml_mime = Email::MIME->new($eml_txt);
 
 	# Validate
-	if (! &parse_email::is_valid_email($email_mime) )
+	if (! &incoming_mail_checks::is_valid_email($eml_mime) )
 	{
         &stash_malformed_email($file_name);
+        &send_mail::invalid_mail_reply($eml_mime);
 	}
 
 	# Munge
-#    my $wrapper_h = &read_email_meta($file_name);
+	my $eml_data = &parse_email::parse_email_for_data($eml_mime);
 
 	# Process
-
+	&actions::run_actions($eml_mime, $eml_data)
 
 
     my $tmp;
@@ -207,11 +211,11 @@ sub process_email($)
                     return undef;
                 }
 
-                my $email_txt = &create_meta_and_attach_email($recipient_email, $entry_to_send);
-#               my $email_txt = &create_meta_email($recipient_email, $entry_to_send);
-#               my $email_txt = &create_attach_email($recipient_email, $entry_to_send);
+                my $eml_txt = &create_meta_and_attach_email($recipient_email, $entry_to_send);
+#               my $eml_txt = &create_meta_email($recipient_email, $entry_to_send);
+#               my $eml_txt = &create_attach_email($recipient_email, $entry_to_send);
 
-                &send_email($email_txt);
+                &send_email($eml_txt);
             }
         }
     }

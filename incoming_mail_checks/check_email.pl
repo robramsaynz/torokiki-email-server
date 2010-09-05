@@ -6,9 +6,9 @@ require 'parse_email.pl';
 require 'mime_walking.pl';
 
 
-sub is_valid_email($)
+sub incoming_mail_checks::is_valid_email($)
 {
-	my $eml_mime = $[0];
+	my $eml_mime = $_[0];
 
 
 	# The help message has different syntax to the rest of the system
@@ -33,12 +33,16 @@ sub is_valid_email($)
 
 
 
-sub is_subject_syntax_valid()
+sub incoming_mail_checks::is_subject_syntax_valid()
 {
-	my $eml_mime = $[0];
+	my $eml_mime = $_[0];
+
+
+	# ??: Should really check for 'http://toro...' or 'http://www.toro...' and
+	# ??: 'image/123/response' flag was right, but ran too short on time.
 
 	# i.e. create-response-to: 'http://torokiki.net/image/123/response/456'
-    my $_ = $eml_mime->header("Subject");
+    $_ = $eml_mime->header("Subject");
 	if (m/^[\w-]+:\s*'\S+'\s*$/)
 		{ return 1; }
 	else 
@@ -52,9 +56,9 @@ sub is_subject_syntax_valid()
 #       pairs in it.
 #   -3: got something not a tag (ie name:) while expecting a tag.
 #   -4: last <tag: "value"> pair missing <"value">
-sub is_text_syntax_valid($)
+sub incoming_mail_checks::is_text_syntax_valid($)
 {
-	my $eml_text = $[0];
+	my $eml_text = $_[0];
 
 
     # Empty file.
@@ -91,16 +95,16 @@ sub is_text_syntax_valid($)
 }
 
 
-sub is_action_allowed($)
+sub incoming_mail_checks::is_action_allowed($)
 {
 	my $eml_mime = $_[0];
 
 
-    my $_ = $eml_mime->header("Subject");
+    $_ = $eml_mime->header("Subject");
 
-	if ( /^get:/ )
+	if ( /^get:/i )
 		{ return 1; }
-	elsif ( /^create-response-to:/ )
+	elsif ( /^create-response-to:/i )
 		{ return 1; }
 #	create-response-to:
 #	set-meta-data-for
@@ -111,19 +115,19 @@ sub is_action_allowed($)
 }
 
 
-sub is_action_valid($);
+sub incoming_mail_checks::is_action_valid($)
 {
 	my $eml_mime = $_[0];
 
 
-    my $_ = $eml_mime->header("Subject");
+    $_ = $eml_mime->header("Subject");
 
-	if ( /^get:/ )
+	if ( /^get:/i )
 	{ 
-		unless ( &is_valid_get_cmd($) )
+		unless ( &is_valid_get_cmd($eml_mime) )
 			{ return undef; }
 	}
-	elsif ( /^create-response-to:/ )
+	elsif ( /^create-response-to:/i )
 	{ 
 		unless ( &is_valid_create_response_to_cmd($eml_mime) )
 			{ return undef; }
@@ -150,21 +154,21 @@ sub is_action_valid($);
 #}
 
 
-sub is_valid_get_cmd($);
+sub incoming_mail_checks::is_valid_get_cmd($)
 {
 	my $eml_mime = $_[0];
 
 	
 	if (&count_mime_attach_recurs($eml_mime) != 0)
 	{ 
-		warn "'get' email commands must have no attachments."	
+		warn "'get' email commands must have no attachments.";
 		return undef; 
 	}
 
 
 	my $text = &get_email_txt($eml_mime);
 
-	%tags = &tag_value_pairs_to_hash($text);
+	my %tags = &tag_value_pairs_to_hash($text);
 
 	## Check for required tags.
 	#if ($tags{something} eq undef)
@@ -176,7 +180,7 @@ sub is_valid_get_cmd($);
 	# Check for invalid tags.
 	for (keys %tags)
 	{
-		warn "'get' doesn't take tags (ie $tags{$_})."
+		warn "'get' doesn't take tags (ie $tags{$_}).";
 		return undef;
 	}
 
@@ -187,7 +191,7 @@ sub is_valid_get_cmd($);
 }
 
 
-sub is_valid_create_response_to_cmd($);
+sub incoming_mail_checks::is_valid_create_response_to_cmd($)
 {
 	my $eml_mime = $_[0];
 
@@ -196,7 +200,7 @@ sub is_valid_create_response_to_cmd($);
 	# ??: accept be text responses (which would mean 0 attachments).
 	if (&count_mime_attach_recurs($eml_mime) != 1)
 	{
-		warn "'create-response-to' email commands must have one attachment."	
+		warn "'create-response-to' email commands must have one attachment.";
 		return undef; 
 	}
 
@@ -204,7 +208,7 @@ sub is_valid_create_response_to_cmd($);
     my $eml_txt = &get_email_txt($eml_mime);
 	unless ($eml_txt)
 	{
-		warn "'create-response-to' email commands must have text."	
+		warn "'create-response-to' email commands must have text.";
 		return undef; 
 	}
 
@@ -219,7 +223,7 @@ sub is_valid_create_response_to_cmd($);
 	## Check for required tags.
 	#if ($tags{something} eq undef)
 	#{
-	#	warn "'create-response-to' missing required tag: $tags{$_}"
+	#	warn "'create-response-to' missing required tag: $tags{$_}";
 	#	return undef;
 	#}
 
@@ -228,10 +232,10 @@ sub is_valid_create_response_to_cmd($);
 	{
 		$_ = $tags{$_};
 
-		#if ( /tags/i || /location/i || /text/i )
-		unless ( /tags/i || /location/i )
+		#if ( /tags/i || /objective/i|| /location/i || /text/i )
+		unless ( /tags/i || /objective/i || /location/i )
 		{
-			warn "'create-response-to' invalid tag: $_"
+			warn "'create-response-to' invalid tag: $_";
 			return undef;
 		}
 	}

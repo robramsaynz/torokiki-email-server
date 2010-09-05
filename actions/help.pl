@@ -1,6 +1,6 @@
 
 
-sub run_help_cmd($);
+sub actions::run_help_cmd($)
 {
 	$eml_mime = $_[0];
 
@@ -8,3 +8,4 @@ sub run_help_cmd($);
 }
 
 
+1;
