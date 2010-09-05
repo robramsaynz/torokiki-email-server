@@ -52,8 +52,7 @@ use IO::All;
 use File::Copy;
 use File::Basename;
 
-require 'incoming_mail_checks/check_email.pl';
-require 'incoming_mail_checks/check_email.pl';
+require 'validate_email/check_email.pl';
 require 'parse_email/parse_email_for_data.pl';
 #use comms::http_torokiki_api;
 require 'actions/run_action.pl';
@@ -123,7 +122,7 @@ sub process_email($)
     my $eml_mime = Email::MIME->new($eml_txt);
 
 	# Validate
-	if (! &incoming_mail_checks::is_valid_email($eml_mime) )
+	if (! &validate_email::is_valid_email($eml_mime) )
 	{
         &stash_malformed_email($file_name);
         &send_mail::invalid_mail_reply($eml_mime);

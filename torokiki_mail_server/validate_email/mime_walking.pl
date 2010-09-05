@@ -6,7 +6,7 @@
 
 # Takes a mime object and a number, and returns number'th 
 # attachment from the mime tree (or undef).
-sub incoming_mail_checks::return_mime_attach_num($$)
+sub validate_email::return_mime_attach_num($$)
 {
 	my $eml_mime = $_[0];
 	my $att_to_get = $_[1];
@@ -23,7 +23,7 @@ sub incoming_mail_checks::return_mime_attach_num($$)
 
 # Internal version which also passes num-attachements variable a down the 
 # recursive chain.
-sub incoming_mail_checks::return_mime_attach_num_recurs($$$)
+sub validate_email::return_mime_attach_num_recurs($$$)
 {
 	my $eml_mime = $_[0];			# MIME object/tree to search.
 	my $att_to_get = $_[1];			# numeric number of attachment to get.
@@ -75,7 +75,7 @@ sub incoming_mail_checks::return_mime_attach_num_recurs($$$)
 }
 
 
-sub incoming_mail_checks::count_mime_attach_recurs($)
+sub validate_email::count_mime_attach_recurs($)
 {
 	my $eml_mime = $_[0];
 
@@ -113,7 +113,7 @@ sub incoming_mail_checks::count_mime_attach_recurs($)
 }
 
 
-sub incoming_mail_checks::is_mime_obj_attach($)
+sub validate_email::is_mime_obj_attach($)
 {
 	my $eml_mime = $_[0];
 
@@ -131,7 +131,7 @@ sub incoming_mail_checks::is_mime_obj_attach($)
 }
 
 
-sub incoming_mail_checks::is_mime_obj_text($)
+sub validate_email::is_mime_obj_text($)
 {
 	my $eml_mime = $_[0];
 

@@ -1,4 +1,4 @@
-# incoming_mail_checks/parse_email.pm
+# validate_email/parse_email.pm
 #
 # Rob Ramsay 21:40 17 Aug 2010
 
@@ -6,7 +6,7 @@ require 'parse_email.pl';
 require 'mime_walking.pl';
 
 
-sub incoming_mail_checks::is_valid_email($)
+sub validate_email::is_valid_email($)
 {
 	my $eml_mime = $_[0];
 
@@ -33,7 +33,7 @@ sub incoming_mail_checks::is_valid_email($)
 
 
 
-sub incoming_mail_checks::is_subject_syntax_valid()
+sub validate_email::is_subject_syntax_valid()
 {
 	my $eml_mime = $_[0];
 
@@ -56,7 +56,7 @@ sub incoming_mail_checks::is_subject_syntax_valid()
 #       pairs in it.
 #   -3: got something not a tag (ie name:) while expecting a tag.
 #   -4: last <tag: "value"> pair missing <"value">
-sub incoming_mail_checks::is_text_syntax_valid($)
+sub validate_email::is_text_syntax_valid($)
 {
 	my $eml_text = $_[0];
 
@@ -95,7 +95,7 @@ sub incoming_mail_checks::is_text_syntax_valid($)
 }
 
 
-sub incoming_mail_checks::is_action_allowed($)
+sub validate_email::is_action_allowed($)
 {
 	my $eml_mime = $_[0];
 
@@ -115,7 +115,7 @@ sub incoming_mail_checks::is_action_allowed($)
 }
 
 
-sub incoming_mail_checks::is_action_valid($)
+sub validate_email::is_action_valid($)
 {
 	my $eml_mime = $_[0];
 
@@ -154,7 +154,7 @@ sub incoming_mail_checks::is_action_valid($)
 #}
 
 
-sub incoming_mail_checks::is_valid_get_cmd($)
+sub validate_email::is_valid_get_cmd($)
 {
 	my $eml_mime = $_[0];
 
@@ -191,7 +191,7 @@ sub incoming_mail_checks::is_valid_get_cmd($)
 }
 
 
-sub incoming_mail_checks::is_valid_create_response_to_cmd($)
+sub validate_email::is_valid_create_response_to_cmd($)
 {
 	my $eml_mime = $_[0];
 
