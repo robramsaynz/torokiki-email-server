@@ -5,7 +5,7 @@ require 'parse_api_object.pl';
 require '../incoming_mail_checks/parse_email.pl';
 
 
-sub parse_email_for_data($)
+sub parse_email::parse_email_for_data($)
 {
     my $eml_mime = $_[0];
 

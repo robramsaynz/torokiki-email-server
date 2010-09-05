@@ -54,7 +54,7 @@ use File::Basename;
 
 require 'incoming_mail_checks/check_email.pl';
 require 'incoming_mail_checks/check_email.pl';
-require 'get_data_from_command/parse_email_for_data.pl';
+require 'parse_email/parse_email_for_data.pl';
 #use comms::http_torokiki_api;
 require 'actions/run_action.pl';
 
@@ -108,7 +108,7 @@ sub main()
 
 sub process_email($)
 {
-    # Files
+		# Files
     my $file_name = $_[0];
 
 	

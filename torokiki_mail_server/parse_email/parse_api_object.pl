@@ -26,7 +26,7 @@ use constant TOROKIKI_SERVER_VERS => "0.1";
 #}
 
 
-sub get_api_obj_from_email($)
+sub parse_email::get_api_obj_from_email($)
 {
     my $eml_mime = $_[0];
 
