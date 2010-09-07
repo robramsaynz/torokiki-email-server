@@ -1,9 +1,10 @@
-# validate_email/parse_email.pm
+# validate_email/parse_email.pl
 #
 # Rob Ramsay 21:40 17 Aug 2010
 
 require 'parse_email.pl';
 require 'mime_walking.pl';
+require 'check_content_locations.pl';
 
 
 sub validate_email::is_valid_email($)
@@ -18,14 +19,11 @@ sub validate_email::is_valid_email($)
 
 	# ?? Convert all of these functions into ( $err, $msg ) returns.
 
-	&is_subject_syntax_valid($eml_mime) || return undef;
+	&validate_email::is_subject_syntax_valid($eml_mime) || return undef;
 
-	&is_action_allowed($eml_mime) || return undef;
+	&validate_email::is_action_allowed($eml_mime) || return undef;
 
-	&is_action_valid($eml_mime) || return undef;
-
-#	&does_content_exist($eml_mime) || return undef;
-
+	&validate_email::is_action_valid($eml_mime) || return undef;
 
 	# Yay no errors.
 	return 1;
@@ -38,15 +36,18 @@ sub validate_email::is_subject_syntax_valid()
 	my $eml_mime = $_[0];
 
 
-	# ??: Should really check for 'http://toro...' or 'http://www.toro...' and
-	# ??: 'image/123/response' flag was right, but ran too short on time.
+    $_ = $eml_mime->header("Subject");
 
 	# i.e. create-response-to: 'http://torokiki.net/image/123/response/456'
-    $_ = $eml_mime->header("Subject");
-	if (m/^[\w-]+:\s*'\S+'\s*$/)
-		{ return 1; }
+	if (m/^[\w-]+:\s*'(\S+)'\s*$/)
+	{ 
+		# Check 'http://torokiki.net/image/123/response/456' syntax is valid.
+		return &validate_email::check_torokiki_object_locations($1);
+	}
 	else 
-		{ return undef;}
+	{ 
+		return undef;
+	}
 }
 
 
@@ -140,18 +141,6 @@ sub validate_email::is_action_valid($)
 		return undef; 
 	}
 }
-
-
-#sub does_content_exist($eml_mime)
-#{
-#	my $eml_mime = $_[0];
-#
-#
-#    $eml_mime->header("Subject") =~ /^[\w-]+:\s*'(\S+)'\s*$/;
-#	my $content = $1;
-#
-#	# Some cunning way of checking if content exists.
-#}
 
 
 sub validate_email::is_valid_get_cmd($)

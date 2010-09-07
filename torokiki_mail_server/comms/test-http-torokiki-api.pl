@@ -11,60 +11,36 @@ use comms::http_torokiki_api;
 
 &main();
 
-sub return_regular_stash_object()
+sub return_api_object()
 {
 
-	# Data pulled from stash/00000004.meta
-	my $obj = 
-	{
-	   "header_info" => {
-		  "Subject" => "image 5",
-		  "Message-ID" => "<20100511042738.GE11461@stimpy>",
-		  "To" => "time.capsule.testing@gmail.com",
-		  "Date" => "Tue, 11 May 2010 16:27:38 +1200",
-		  "From" => "robert.ramsay.nz@gmail.com"
-	   },
-	   "mime_info_ref" => {
-		  "splitup" => {
-			 "filename" => "5.jpeg",
-			 "Content-Type" => "image/jpeg",
-			 "Content-Disposition" => "attachment",
-			 "Content-Transfer-Encoding" => "base64"
-		  },
-		  "full" => {
-			 "Content-Type" => "image/jpeg",
-			 "Content-Disposition" => "attachment; filename=\"5.jpeg\"",
-			 "Content-Transfer-Encoding" => "base64"
-		  }
-	   },
-	   "db_info" => {
-		  "data_file" => "./stash/00000004.dat",
-		  "meta_file" => "./stash/00000004.meta",
-		  "unique_id" => "00000004"
-	   },
-	   "tag_info" => {
-		  "action" => "add-content",
-		  "type" => "image",
-		  "tag" => "testing",
-		  "description" => "test image 5"
-	   }
-	};
+	my $api_obj = {
+			'Submitter' => 'sam@silverstripe.com',
+			'Text' => 'This is a text response',
+			'Tags' => [ 'fart', 'bums', 'old-things' ],
+			'InspiredBy' => 'http://torokiki.net/image/123/response/456',
+			'Objective'=> 'What do people wear?',
+			'Location' => '123 Some Street, Suburb',
+			'Attachment' => {
+				'name' => 'my-file.png',
+				'data' => 'AJKAHLKUSHDJKLFHJKDLSHFGKJSDLKSFHSDFKLJSDHKFLHDJKSLFHKSDLFSD',
+			},
+			'APICaller' => {
+				'service' => 'Robs email thing',
+				'id' => '00000A',
+			}
+		};
 
-	return $obj;
+	return $api_obj;
 }
 
 
 sub main()
 {
 
-	$mailserv_obj = &return_regular_stash_object();
+	my $mailserv_obj = &return_api_object();
 
-	# !! dirty hack caused by mailserv_obj and api_obj being too 
-	# !! different.
-	# !! This should be replaced when I fix up my mailserv_obj to reflect the torokiki api.
-	$mailserv_obj->{tag_info}->{InspiredBy} = "http://torokiki.net/image/123/response/456";
-
-	my ($err, $val) = &send_mailserv_obj_to_torokiki_server($mailserv_obj);
+	my ($err, $val) = &comms::send_api_obj_to_torokiki_server($mailserv_obj);
 
 	if ($err) 
 	{
