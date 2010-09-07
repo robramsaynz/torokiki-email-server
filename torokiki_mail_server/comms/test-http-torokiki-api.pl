@@ -6,7 +6,7 @@
 # Rob Ramsay 14:23 20 Jul 2010
 
 
-use comms::http_torokiki_api;
+require 'http_torokiki_api.pl'
 
 
 &main();
