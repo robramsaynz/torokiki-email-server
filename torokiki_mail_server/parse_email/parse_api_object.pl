@@ -13,7 +13,7 @@ use constant TOROKIKI_SERVER_VERS => "0.1";
 #    'Text' : 'This is a text response',
 #    'Tags' : [ 'fart', 'bums', 'old-things' ],
 #    'InspiredBy' : 'http://torokiki.net/image/123/response/456',
-#    'Objective: 'What do people wear?',
+#    'Objective': 'What do people wear?',
 #    'Location' : '123 Some Street, Suburb',
 #    'Attachment': {
 #        'name' : 'my-file.png',
