@@ -16,7 +16,7 @@ sub actions::run_action($)
 	# The help message has different syntax to the rest of the system
 	if ( &is_help_message($eml_mime) )
 	{ 
-		return &run_help_cmd($eml_mime);
+		return &send_help($eml_mime);
 	}
 
 
@@ -24,11 +24,11 @@ sub actions::run_action($)
 
 	if ( /^get:/i )
 	{ 
-		return &run_get_cmd($eml_mime);
+		return &get_content($eml_mime);
 	}
 	elsif ( /^create-response-to:/i )
 	{ 
-		return &run_create_response_to_cmd($eml_mime);
+		return &create_response_to_content($eml_mime);
 	}
 #	create-response-to:
 #	set-meta-data-for

@@ -1,5 +1,5 @@
 
-sub actions::run_get_cmd($)
+sub actions::get_content($)
 {
 	$eml_mime = $_[0];
 
