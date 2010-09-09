@@ -29,15 +29,15 @@ sub comms::send_api_obj_to_torokiki_server($)
 
 	# For more info on what is being extracted here, read the file:
 	# 	validate_email/check_content_location.pl
-	my $cont_url = $api_obj->{InspiredBy}; 
+	my $content_url = $api_obj->{InspiredBy}; 
 
 	# ie (http://torokiki.net)(/image/123/response/456)/?
-	$cont_url =~ m{http://(www.)?([^/]+)(.+)/?};
+	$content_url =~ m{http://(www.)?([^/]+)(.+)/?};
 	my $server = "http://$1";
-	my $cont_location = $2;
+	my $content_location = $2;
 
 	# ie (/image/123/response)(/456)?
-	$cont_location =~ m{(/[^/]+/[^/]+/[^/]+)(/[^/]+)?/?};
+	$content_location =~ m{(/[^/]+/[^/]+/[^/]+)(/[^/]+)?/?};
 	my $seed_content = $1;
 	#my $opt_response_content = $2;
 
@@ -59,9 +59,10 @@ warn "--------------------------------\n";
 	# !! to a setup fn?
 	$user_agent = LWP::UserAgent->new();
 if (undef){
-
-				POST "$server$seed_content",
-				[
+warn ">2\n";
+	$response = $user_agent->request(
+					POST "$server$seed_content",
+					[
 						#"POST /image/123/response HTTP/1.1"
 						#"Host" => "torokiki.net"
 						"Content-type" => "application/json",
@@ -79,14 +80,14 @@ warn ">3\n";
 	elsif ($code =~ /5??/ && $code =~ /4??/)
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http push request to $server$cont_location\n".
+		warn	"Error on http push request to $server$content_location\n".
 				"Server returned error: ".$reponse->status_line()."\n";
 		return (undef, "http error");
 	}
 	else
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http push request to $server$cont_location\n".
+		warn	"Error on http push request to $server$content_location\n".
 				"Server returned error: ".$reponse->status_line()."\n" .
 				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!";
 		return (undef, "unknown http error");
@@ -97,12 +98,8 @@ warn ">3\n";
 # Returns api_object.
 sub comms::get_content_from_torokiki_server()
 {
-	my $api_obj;
-
-	
-	# Settings for server were connecting to 
-	$server = "http://torokiki.net";
-	$cont_location = "/image/123/response/456";
+	# ie http://torokiki.net/image/123/response/456
+	my $content_url = $_[0];
 
 
 	# Get object from server via http.
@@ -112,7 +109,7 @@ sub comms::get_content_from_torokiki_server()
 	$user_agent = LWP::UserAgent->new();
 if (undef){
 	$response = $user_agent->request(
-					GET "$server$cont_location",
+					GET "$content_url",
 					[
 						# GET http://torokiki.net/image/123/response/456 HTTP/1.1
 						"Accept" => "application/json",
@@ -128,9 +125,9 @@ if (undef){
 	else
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http get request to $server$cont_location\n".
+		warn	"Error on http get request to $server$content_location\n".
 				"Expecting 200. Server returned error: ".$reponse->status_line();
-		return (-2, "http error");
+		return (undef, "http error");
 	}
 }
 
