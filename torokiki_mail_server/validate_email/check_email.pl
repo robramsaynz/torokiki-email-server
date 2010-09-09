@@ -13,7 +13,7 @@ sub validate_email::is_valid_email($)
 
 
 	# The help message has different syntax to the rest of the system
-	if ( &is_help_message($eml_mime) )
+	if ( &validate_email::is_help_message($eml_mime) )
 		{ return 1; }
 
 

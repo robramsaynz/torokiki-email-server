@@ -18,7 +18,7 @@ sub validate_email::is_help_message($)
 	}
 	elsif ($subj =~ m/^\s*$/)
 	{ 		
-		my $text = &get_email_txt($eml_mime);
+		my $text = &validate_email::get_email_txt($eml_mime);
 		unless ($text)
 			{ return undef; }
 

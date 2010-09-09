@@ -35,27 +35,27 @@
 
 sub validate_email::check_torokiki_object_locations($)
 {
-	my $cont_url = $_[0];	# A URL string.
+	my $content_url = $_[0];	# A URL string.
 
 
 	# ie http://(torokiki.net(/image/123/response/456)/?
 	# note:
 	#	- any "www." supplied is removed.
 	# 	- any trailing '/' is trimmed.
-	$cont_url =~ m{http://(www.)?([^/]+)(.+)/?};
+	$content_url =~ m{http://(www.)?([^/]+)(.+)/?};
 	my $server = "http://$1"; 	
-	my $cont_location = $2; 	
+	my $content_location = $2; 	
 
 	if ($server ne "http://torokiki.net")
 	{
-		warn	"Error checking content-url: $cont_url\n".
+		warn	"Error checking content-url: $content_url\n".
 				"Invalid server: $server\n";
 		return undef;
 	}
 
 	# ie /(image)/(123)/(response)(/456)?
 	# note: the response-content (456) is optional.
-	$cont_location =~ m{/([^/])+/([^/]+)/([^/]+)(/[^/]+)?};
+	$content_location =~ m{/([^/])+/([^/]+)/([^/]+)(/[^/]+)?};
 	my $seed_cont_type = $1;
 	my $seed_cont_id = $2;
 	my $response = $3;
@@ -65,7 +65,7 @@ sub validate_email::check_torokiki_object_locations($)
 	# Note we only take image content types at this stage.
 	if ($seed_cont_type ne "image")
 	{
-		warn	"Error checking content-url: $cont_url\n".
+		warn	"Error checking content-url: $content_url\n".
 				"Invalid seed content type: $seed_cont_type\n";
 		return undef;
 	}
@@ -73,7 +73,7 @@ sub validate_email::check_torokiki_object_locations($)
 #	# ie 123
 #	if ($seed_cont_id ne "NOTCHECKED")
 #	{
-#		warn	"Error checking content-url: $cont_url\n".
+#		warn	"Error checking content-url: $content_url\n".
 #				"Invalid seed_cont_id: $seed_cont_id\n";
 #		return undef;
 #	}
@@ -82,7 +82,7 @@ sub validate_email::check_torokiki_object_locations($)
 	if ($response eq "response"
 	if ($1 ne "http://(torokiki.net")
 	{
-		warn	"Error checking content-url: $cont_url\n".
+		warn	"Error checking content-url: $content_url\n".
 				"this should be 'response': $response\n";
 		return undef;
 	}
@@ -90,7 +90,7 @@ sub validate_email::check_torokiki_object_locations($)
 #	# ie 456
 #	if ($response_cont_id ne undef and $response_cont_id ne "NOTCHECKED")
 #	{
-#		warn	"Error checking content-url: $cont_url\n".
+#		warn	"Error checking content-url: $content_url\n".
 #				"Invalid response content id: $response_cont_id\n";
 #		return undef;
 #	}
