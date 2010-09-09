@@ -10,13 +10,13 @@ require '../incoming_mail_checks/parse_email.pl';
 
 sub actions::run_action($)
 {
-	my $eml_mime = $_[0];
+	my $eml_data = $_[0];
 
 
 	# The help message has different syntax to the rest of the system
-	if ( &is_help_message($eml_mime) )
+	if ( &validate_email::is_help_message($eml_data) )
 	{ 
-		return &send_help($eml_mime);
+		return &actions::send_help($eml_data);
 	}
 
 
@@ -24,11 +24,27 @@ sub actions::run_action($)
 
 	if ( /^get:/i )
 	{ 
-		return &get_content($eml_mime);
+		my $rtn = &actions::get_content($eml_data);
+
+		unless ($rtn)
+		{
+			warn "Error running 'get' action: $msg"
+			return undef;
+		}
+
+		return 1;
 	}
 	elsif ( /^create-response-to:/i )
 	{ 
-		return &create_response_to_content($eml_mime);
+		my ($rtn, $msg) = &actions::create_response_to_content($eml_data);
+
+		unless ($rtn)
+		{
+			warn "Error running 'create-response-to' action: $msg"
+			return undef;
+		}
+
+		return 1;
 	}
 #	create-response-to:
 #	set-meta-data-for

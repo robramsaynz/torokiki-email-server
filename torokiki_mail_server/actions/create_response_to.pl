@@ -8,13 +8,17 @@ use comms::http_torokiki_api;
 
 sub actions::create_response_to_content($)
 {
-	$eml_mime = $_[0];
-	$eml_mime = $_[0];
+	$eml_data = $_[0];
 
-
-	&comms::send_mailserv_obj_to_torokiki_server($);
-
-	return -1;
+	
+	if ( $eml_data{api_obj} )
+	{
+		return &comms::send_mailserv_obj_to_torokiki_server( $eml_data{api_obj} );
+	}
+	else
+	{
+		return (undef, "\$eml_data{api_obj} not filled out.");
+	}
 }
 
 

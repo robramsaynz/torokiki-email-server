@@ -33,8 +33,8 @@ sub parse_email::get_api_obj_from_email($)
 	my $api_obj = {};
 
 
-	my $text = &get_email_txt($eml_mime);
-	my %tags = &tag_value_pairs_to_hash($text);
+	my $text = &validate_email::get_email_txt($eml_mime);
+	my %tags = &validate_email::tag_value_pairs_to_hash($text);
 
 	# ??: Should check for and remove: remove me <save@me>
 	$api_obj->{Submitter} = $tags->header("From");

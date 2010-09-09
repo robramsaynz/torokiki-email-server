@@ -107,7 +107,7 @@ sub main()
 
 sub process_email($)
 {
-		# Files
+	# Files
     my $file_name = $_[0];
 
 	
@@ -124,15 +124,15 @@ sub process_email($)
 	# Validate
 	if (! &validate_email::is_valid_email($eml_mime) )
 	{
-        &stash_malformed_email($file_name);
-        &send_mail::invalid_mail_reply($eml_mime);
+        &stash::stash_erroneous_email($eml_txt);
+#		send_mail::invalid_mail_reply($eml_mime);
 	}
 
 	# Munge
 	my $eml_data = &parse_email::parse_email_for_data($eml_mime);
 
 	# Process
-	&actions::run_actions($eml_mime, $eml_data)
+	&actions::run_actions($eml_data);
 }
 
 
