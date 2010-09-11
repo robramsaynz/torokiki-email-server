@@ -2,6 +2,8 @@
 #
 # Rob Ramsay 01:42  8 Sep 2010
 
+use strict;
+
 
 # Needed to have c-style function-local vars with state.
 use feature 'state';    
@@ -24,7 +26,7 @@ sub stash::unique_names($)
         # ??: ie a 32 bit number.
         my $txt_number = sprintf("%08X", $current_number);
 
-        $file = "$stash_dir/$txt_number.eml";
+        my $file = "$stash_dir/$txt_number.eml";
 
         # ??: this should be checked so that it finishes if it reaches 
         # ??: some reasonable point.

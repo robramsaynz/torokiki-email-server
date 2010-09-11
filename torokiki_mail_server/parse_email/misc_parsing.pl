@@ -2,10 +2,11 @@
 #
 # Rob Ramsay 18:56 29 Aug 2010
 
+use strict;
 
 # See http://torokiki.net/docs/mailserver-command-spec.md for a description 
 # of what a help message looks like.
-sub validate_email::is_help_message($)
+sub parse_email::is_help_message($)
 {
 	my $eml_mime = $_[0];
 
@@ -18,7 +19,7 @@ sub validate_email::is_help_message($)
 	}
 	elsif ($subj =~ m/^\s*$/)
 	{ 		
-		my $text = &validate_email::get_email_txt($eml_mime);
+		my $text = &parse_email::get_email_txt($eml_mime);
 		unless ($text)
 			{ return undef; }
 
@@ -36,7 +37,7 @@ sub validate_email::is_help_message($)
 
 # Extract email txt from the email assuming 
 # Takes a pointer to the main Email::MIME node.
-sub validate_email::get_email_txt($)
+sub parse_email::get_email_txt($)
 {
     my $eml_mime = $_[0];
 
@@ -44,7 +45,7 @@ sub validate_email::get_email_txt($)
     # Look in main mime-object for text.
     if ($eml_mime->content_type =~ m{text/plain})
     {
-        return &validate_email::convert_html_email_to_txt($eml_mime);
+        return &parse_email::convert_html_email_to_txt($eml_mime);
     }   
     elsif ($eml_mime->content_type =~ m{text/html})
     {
@@ -69,7 +70,7 @@ sub validate_email::get_email_txt($)
         {
             if ($_->content_type =~ m{text/html})
             {
-                return &convert_html_email_to_txt($_);
+                return &parse_email::convert_html_email_to_txt($_);
             }
         }
     }
@@ -79,14 +80,14 @@ sub validate_email::get_email_txt($)
 }
 
 
-sub validate_email::convert_html_email_to_txt($)
+sub parse_email::convert_html_email_to_txt($)
 {
-    $eml_mime = $_[0];
+    my $eml_mime = $_[0];
 
     # ??: Needs replacing with something proper.
     my $filename = "grock.pl.tmp";
 
-    open FILE, ">", "$filename" || die "Couldn't open grock.pl.tmp\n";
+    open FILE, ">", "$filename" or die "Couldn't open grock.pl.tmp\n";
     print FILE $eml_mime->body();
     close FILE;
 
@@ -106,18 +107,16 @@ sub validate_email::convert_html_email_to_txt($)
 # Returns:  \%hash
 #           -1: got something not a tag (ie name:) while expecting a tag.
 #           -2: last <tag: "value"> pair missing <"value">
-sub validate_email::tag_value_pairs_to_hash($)
+sub parse_email::tag_value_pairs_to_hash($)
 {
     my $email_txt = $_[0];
 
-    my $tag = undef;
     my $value = "";
-
     my %hash;
 
 
-    # Split the string on a " separator.
-    @split_txt  = split('"', $email_txt, -1);
+    # Split the string on a ' separator.
+    my @split_txt  = split("'", $email_txt, -1);
 
     # There's a possibility the last text chunk is all white-space.
     # This causes problems for the parser, so remove this string type.
@@ -127,6 +126,7 @@ sub validate_email::tag_value_pairs_to_hash($)
     }
 
     # Use the split strings to extract tag: "value" pairs.
+    my $tag = undef;
     for (@split_txt)
     {
         if (!$tag)

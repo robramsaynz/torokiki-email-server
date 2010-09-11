@@ -2,6 +2,7 @@
 # 
 # Rob Ramsay 01:42  8 Sep 2010 
  
+use strict;
  
 require 'stash/misc_stash.pl'; 
 

@@ -19,8 +19,6 @@
 # ??: !! this will probably require adjusting the program flow 
 # ??: !! unfortunately.
 # ??: !! 
-# ??: !! + I forgot to die/croak on the file open calls.
-# ??: !! 
 # ??: !! + I'm stashing the data_file and meta_file, which are already 
 # ??: !! implied by file names (ie data duplication).
 # ??: !! 
@@ -44,6 +42,7 @@
 # ??: !!    - print stash-id on storage (and other actions too prob).
 # ??: !! 
 
+use strict;
 
 use Email::MIME;
 #use Encode;
@@ -112,7 +111,7 @@ sub process_email($)
 
 	
 	# Read
-    open FILE, "<", $file_name;
+    open FILE, "<", $file_name or die "Exiting! Couldn't open $file_name.\n";
 	my $eml_txt;
     {
     local $/ = undef;   # read all of file
@@ -122,12 +121,16 @@ sub process_email($)
 
     my $eml_mime = Email::MIME->new($eml_txt);
 
+	# Print from header.
+    print "\n";
+    print "Processing mail from:  ". $eml_mime->header("From") ."\n";
+
 	# Validate
 	if (! &validate_email::is_valid_email($eml_mime) )
 	{
         my $filename = &stash::stash_erroneous_email($eml_txt);
 #		send_mail::invalid_mail_reply($eml_mime);
-		warn "Invalid email. Ignored and saved as $filename\n";
+		warn "Invalid email! Ignored and saved as $filename\n";
 		exit -1;
 	}
 

@@ -1,10 +1,12 @@
-# validate_email/parse_email.pl
+# validate_email/check_email.pl
 #
 # Rob Ramsay 21:40 17 Aug 2010
 
-require 'validate_email/parse_email.pl';
-require 'validate_email/mime_walking.pl';
+use strict;
+
 require 'validate_email/check_content_locations.pl';
+require 'parse_email/misc_parsing.pl';
+require 'parse_email/mime_walking.pl';
 
 
 sub validate_email::is_valid_email($)
@@ -13,17 +15,17 @@ sub validate_email::is_valid_email($)
 
 
 	# The help message has different syntax to the rest of the system
-	if ( &validate_email::is_help_message($eml_mime) )
+	if ( &parse_email::is_help_message($eml_mime) )
 		{ return 1; }
 
 
 	# ?? Convert all of these functions into ( $err, $msg ) returns.
 
-	&validate_email::is_subject_syntax_valid($eml_mime) || return undef;
+	&validate_email::is_subject_syntax_valid($eml_mime) or return undef;
 
-	&validate_email::is_action_allowed($eml_mime) || return undef;
+	&validate_email::is_action_allowed($eml_mime) or return undef;
 
-	&validate_email::is_action_valid($eml_mime) || return undef;
+	&validate_email::is_action_valid($eml_mime) or return undef;
 
 
 	# Yay no errors.
@@ -72,14 +74,14 @@ sub validate_email::is_text_syntax_valid($)
 	}
 
     # Has text but no tags.
-    unless ($eml_txt =~ /"/ and  $eml_txt =~ /:/)
+    unless ($eml_txt =~ /'/ and  $eml_txt =~ /:/)
     {
         warn "validate_email::is_text_syntax_valid(): No Torokiki Mailserver markup in email.\n";
 		return -2; 
 	}
 
 	# ??: We do this function again later, which will slow the system down.
-	my $rtn = &validate_email::tag_value_pairs_to_hash($eml_txt);
+	my $rtn = &parse_email::tag_value_pairs_to_hash($eml_txt);
 
 	if ($rtn == -1 || $rtn == -2)
 	{
@@ -154,16 +156,16 @@ sub validate_email::is_valid_get_cmd($)
 	my $eml_mime = $_[0];
 
 	
-	if (&validate_email::count_mime_attach_recurs($eml_mime) != 0)
+	if (&parse_email::count_mime_attach_recurs($eml_mime) != 0)
 	{ 
 		warn "validate_email::is_valid_get_cmd(): command must have no attachments.";
 		return undef; 
 	}
 
 
-	my $text = &validate_email::get_email_txt($eml_mime);
+	my $text = &parse_email::get_email_txt($eml_mime);
 
-	my $tags = &validate_email::tag_value_pairs_to_hash($text);
+	my $tags = &parse_email::tag_value_pairs_to_hash($text);
 
 	## Check for required tags.
 	#if ($tags->{something} eq undef)
@@ -193,14 +195,14 @@ sub validate_email::is_valid_create_response_to_cmd($)
 
 	# ??: at the moment, we require an image, but in the future this may 
 	# ??: accept be text responses (which would mean 0 attachments).
-	if (&validate_email::count_mime_attach_recurs($eml_mime) != 1)
+	if (&parse_email::count_mime_attach_recurs($eml_mime) != 1)
 	{
 		warn "validate_email::is_valid_create_response_to_cmd(): command must have one attachment.";
 		return undef; 
 	}
 
 
-    my $eml_txt = &validate_email::get_email_txt($eml_mime);
+    my $eml_txt = &parse_email::get_email_txt($eml_mime);
 	unless ($eml_txt)
 	{
 		warn "validate_email::is_valid_create_response_to_cmd(): command must have text.";
@@ -208,12 +210,12 @@ sub validate_email::is_valid_create_response_to_cmd($)
 	}
 
 	# ?? Convert into ( $err, $msg ) returns.
-	my $rtn = &validate_email::is_text_syntax_valid($eml_mime);
+	my $rtn = &validate_email::is_text_syntax_valid($eml_txt);
 	if ($rtn != 0)
 		{ return undef; }
 
 
-	my $tags = &validate_email::tag_value_pairs_to_hash($eml_txt);
+	my $tags = &parse_email::tag_value_pairs_to_hash($eml_txt);
 
 	## Check for required tags.
 	#if ($tags->{something} eq undef)
@@ -225,8 +227,6 @@ sub validate_email::is_valid_create_response_to_cmd($)
 	# Check for invalid tags.
 	for (keys %$tags)
 	{
-		$_ = $tags{$_};
-
 		#if ( /tags/i || /objective/i|| /location/i || /text/i )
 		unless ( /tags/i || /objective/i || /location/i )
 		{

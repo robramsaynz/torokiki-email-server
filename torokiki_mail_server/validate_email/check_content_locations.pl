@@ -4,6 +4,7 @@
 #
 # Rob Ramsay 21:02  7 Sep 2010
 
+use strict;
 
 #
 # Content url's are the links to images/text/... on the Torokiki server that 

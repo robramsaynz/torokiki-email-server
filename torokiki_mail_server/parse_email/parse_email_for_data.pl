@@ -1,8 +1,10 @@
 #
 # Rob Ramsay 00:42  3 Sep 2010
 
+use strict;
+
 require 'parse_email/parse_api_object.pl';
-require 'validate_email/parse_email.pl';
+require 'parse_email/misc_parsing.pl';
 
 
 sub parse_email::parse_email_for_data($)
@@ -12,7 +14,7 @@ sub parse_email::parse_email_for_data($)
 
     # The help message has different syntax to the rest of the system,
 	# and are ignored.
-    if ( &validate_email::is_help_message($eml_mime) )
+    if ( &parse_email::is_help_message($eml_mime) )
         { return undef; }
 
 

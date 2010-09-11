@@ -3,10 +3,11 @@
 #
 # Rob Ramsay 18:56 29 Aug 2010
 
+use strict;
 
 # Takes a mime object and a number, and returns number'th 
 # attachment from the mime tree (or undef).
-sub validate_email::return_mime_attach_num($$)
+sub parse_email::return_mime_attach_num($$)
 {
 	my $eml_mime = $_[0];
 	my $att_to_get = $_[1];
@@ -16,26 +17,26 @@ sub validate_email::return_mime_attach_num($$)
 	if ( $att_to_get < 1 )
 		{ return undef; }
 
-	$num_attach = 0;
-	return &return_mime_attach_num_recurs($eml_mime, $att_to_get, \$num_attach);
+	my $num_attachs = 0;
+	return &parse_email::return_mime_attach_num_recurs($eml_mime, $att_to_get, \$num_attachs);
 }
 
 
 # Internal version which also passes num-attachements variable a down the 
 # recursive chain.
-sub validate_email::return_mime_attach_num_recurs($$$)
+sub parse_email::return_mime_attach_num_recurs($$$)
 {
 	my $eml_mime = $_[0];			# MIME object/tree to search.
 	my $att_to_get = $_[1];			# numeric number of attachment to get.
-	my $num_attach_ref = $_[2];		# pointer to number of attachments.
+	my $num_attachs_ref = $_[2];	# pointer to number of attachments.
 
 
-	if ( &validate_email::is_mime_obj_attach($eml_mime) )
+	if ( &parse_email::is_mime_obj_attach($eml_mime) )
 	# it's an attachement.
 	{ 
 		$$num_attachs_ref++;
 
-		if ($att_to_get == $$num_attach_ref)
+		if ($att_to_get == $$num_attachs_ref)
 			{ return $_; }
 		else
 			{ return undef; }
@@ -53,12 +54,12 @@ sub validate_email::return_mime_attach_num_recurs($$$)
 #			if ($_->content_type =~ m{multipart/related} )	# ??: removable
 			if ($_->content_type =~ m{multipart/.+} )
 			{
-				my $obj = &return_mime_attach_num_recurs($_, $att_to_get, $num_attach_ref);
+				my $obj = &return_mime_attach_num_recurs($_, $att_to_get, $num_attachs_ref);
 
 				if ($obj)
 					{ return $_; }
 			}
-			elsif ( &validate_email::is_mime_obj_attach($_) )
+			elsif ( &parse_email::is_mime_obj_attach($_) )
 			{
 				$$num_attachs_ref++;
 
@@ -75,12 +76,12 @@ sub validate_email::return_mime_attach_num_recurs($$$)
 }
 
 
-sub validate_email::count_mime_attach_recurs($)
+sub parse_email::count_mime_attach_recurs($)
 {
 	my $eml_mime = $_[0];
 
 
-	if ( &validate_email::is_mime_obj_attach($eml_mime) )
+	if ( &parse_email::is_mime_obj_attach($eml_mime) )
 	# it's an attachement.
 	{ 
 		return 1; 
@@ -102,7 +103,7 @@ sub validate_email::count_mime_attach_recurs($)
 			{
 				$num_attachs +=	&count_mime_attach_recurs($_);
 			}
-			elsif ( &validate_email::is_mime_obj_attach($_) )
+			elsif ( &parse_email::is_mime_obj_attach($_) )
 			{
 				$num_attachs++;
 			}
@@ -113,7 +114,7 @@ sub validate_email::count_mime_attach_recurs($)
 }
 
 
-sub validate_email::is_mime_obj_attach($)
+sub parse_email::is_mime_obj_attach($)
 {
 	my $eml_mime = $_[0];
 
@@ -131,7 +132,7 @@ sub validate_email::is_mime_obj_attach($)
 }
 
 
-sub validate_email::is_mime_obj_text($)
+sub parse_email::is_mime_obj_text($)
 {
 	my $eml_mime = $_[0];
 

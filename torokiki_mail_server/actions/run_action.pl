@@ -2,10 +2,12 @@
 #
 # Rob Ramsay 22:27 29 Aug 2010
 
+use strict;
+
 require 'actions/create_response_to.pl';
 require 'actions/get.pl';
 require 'actions/help.pl';
-require 'validate_email/parse_email.pl';
+require 'parse_email/misc_parsing.pl';
 
 
 sub actions::run_action($)
@@ -14,17 +16,17 @@ sub actions::run_action($)
 
 
 	# The help message has different syntax to the rest of the system
-	if ( &validate_email::is_help_message($eml_data->{eml_mime}) )
+	if ( &parse_email::is_help_message($eml_data->{eml_mime}) )
 	{ 
-		return &actions::send_help($eml_mime);
+		return &actions::send_help($eml_data->{eml_mime});
 	}
 
 
-    $_ = $eml_mime->header("Subject");
+    $_ = $eml_data->{eml_mime}->header("Subject");
 
 	if ( /^get:/i )
 	{ 
-		my $rtn = &actions::get_content($eml_data);
+		my ($rtn, $msg) = &actions::get_content($eml_data);
 
 		unless ($rtn)
 		{
