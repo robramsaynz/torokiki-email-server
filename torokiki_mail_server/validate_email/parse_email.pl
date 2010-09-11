@@ -44,7 +44,7 @@ sub validate_email::get_email_txt($)
     # Look in main mime-object for text.
     if ($eml_mime->content_type =~ m{text/plain})
     {
-        return &convert_html_email_to_txt($eml_mime);
+        return &validate_email::convert_html_email_to_txt($eml_mime);
     }   
     elsif ($eml_mime->content_type =~ m{text/html})
     {

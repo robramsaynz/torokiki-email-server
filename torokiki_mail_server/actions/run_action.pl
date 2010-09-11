@@ -2,10 +2,10 @@
 #
 # Rob Ramsay 22:27 29 Aug 2010
 
-require 'create_response_to.pl';
-require 'get.pl';
-require 'help.pl';
-require '../incoming_mail_checks/parse_email.pl';
+require 'actions/create_response_to.pl';
+require 'actions/get.pl';
+require 'actions/help.pl';
+require 'validate_email/parse_email.pl';
 
 
 sub actions::run_action($)
@@ -14,9 +14,9 @@ sub actions::run_action($)
 
 
 	# The help message has different syntax to the rest of the system
-	if ( &validate_email::is_help_message($eml_data) )
+	if ( &validate_email::is_help_message($eml_data->{eml_mime}) )
 	{ 
-		return &actions::send_help($eml_data);
+		return &actions::send_help($eml_mime);
 	}
 
 
@@ -28,7 +28,7 @@ sub actions::run_action($)
 
 		unless ($rtn)
 		{
-			warn "Error running 'get' action: $msg"
+			warn "Error running 'get' action: $msg";
 			return undef;
 		}
 
@@ -40,7 +40,7 @@ sub actions::run_action($)
 
 		unless ($rtn)
 		{
-			warn "Error running 'create-response-to' action: $msg"
+			warn "Error running 'create-response-to' action: $msg";
 			return undef;
 		}
 

@@ -56,6 +56,7 @@ require 'validate_email/check_email.pl';
 require 'parse_email/parse_email_for_data.pl';
 require 'comms/http_torokiki_api.pl';
 require 'actions/run_action.pl';
+require 'stash/stash.pl';
 
 
 ## Needed to have c-style function-local vars with state.
@@ -65,7 +66,6 @@ require 'actions/run_action.pl';
 # ---------------- Globals ---------------- 
 
 my $stash_dir = "./stash";
-# !! this const is also declared in other files (ie data-dupl.)
 use constant TOROKIKI_SERVER_VERS => "0.1";
 
 
@@ -113,9 +113,10 @@ sub process_email($)
 	
 	# Read
     open FILE, "<", $file_name;
+	my $eml_txt;
     {
     local $/ = undef;   # read all of file
-    my $eml_txt = <FILE>;
+    $eml_txt = <FILE>;
     }
     close FILE;
 
@@ -124,15 +125,17 @@ sub process_email($)
 	# Validate
 	if (! &validate_email::is_valid_email($eml_mime) )
 	{
-        &stash::stash_erroneous_email($eml_txt);
+        my $filename = &stash::stash_erroneous_email($eml_txt);
 #		send_mail::invalid_mail_reply($eml_mime);
+		warn "Invalid email. Ignored and saved as $filename\n";
+		exit -1;
 	}
 
 	# Munge
 	my $eml_data = &parse_email::parse_email_for_data($eml_mime);
 
 	# Process
-	&actions::run_actions($eml_data);
+	&actions::run_action($eml_data);
 }
 
 

@@ -9,7 +9,7 @@ sub actions::get_content($)
 	$eml_data = $_[0];
 
 
-	if ( $eml_data{get_url} )
+	if ( $eml_data->{get_url} )
 	{
 		return &comms::get_content_from_torokiki_server( $eml_data{get_url} );
 	}

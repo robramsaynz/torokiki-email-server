@@ -1,4 +1,4 @@
-# comms/http_torokiki_api.pm 
+# comms/http_torokiki_api.pl
 #
 # Talks to a torokiki server using the api specified at 
 # http://torokiki.net/docs/api.md
@@ -18,13 +18,11 @@ use MIME::Base64;
 #use MIME::Base64::Per; # (Pure Perl version)
 
 
-# !! this const is also declared in other files (ie data-dupl.)
-use constant TOROKIKI_SERVER_VERS => "0.1";
-
 
 sub comms::send_api_obj_to_torokiki_server($)
 {
 	my $api_obj = $_[0];
+print "send_content" ; exit 0 ;
 
 
 	# For more info on what is being extracted here, read the file:
@@ -33,8 +31,8 @@ sub comms::send_api_obj_to_torokiki_server($)
 
 	# ie (http://torokiki.net)(/image/123/response/456)/?
 	$content_url =~ m{http://(www.)?([^/]+)(.+)/?};
-	my $server = "http://$1";
-	my $content_location = $2;
+	my $server = "http://$2";
+	my $content_location = $3;
 
 	# ie (/image/123/response)(/456)?
 	$content_location =~ m{(/[^/]+/[^/]+/[^/]+)(/[^/]+)?/?};
@@ -46,7 +44,7 @@ sub comms::send_api_obj_to_torokiki_server($)
 	my $x_api_key = "arandomX-API-Key";
 
 
-warn ">1\n";
+warn "---- Actual content setting disabled. ----\n";
 	# Convert to a JSON string.
 	my $api_obj_as_txt = JSON::PP->new->allow_nonref->utf8->pretty->encode($api_obj);
 warn "---- \$api_obj_as_txt ----\n";
@@ -100,6 +98,7 @@ sub comms::get_content_from_torokiki_server()
 {
 	# ie http://torokiki.net/image/123/response/456
 	my $content_url = $_[0];
+print "get_content" ; exit 0 ;
 
 
 	# Get object from server via http.
@@ -107,6 +106,10 @@ sub comms::get_content_from_torokiki_server()
 	# !! would there be advantages to moving the object decl
 	# !! to a setup fn?
 	$user_agent = LWP::UserAgent->new();
+warn "---- Actual content getting disabled. ----\n";
+warn "---- \$conent_url ----\n";
+warn "$conent_url\n";
+warn "--------------------------------\n";
 if (undef){
 	$response = $user_agent->request(
 					GET "$content_url",

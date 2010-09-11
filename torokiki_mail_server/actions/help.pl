@@ -2,12 +2,13 @@
 #
 #
 
-my $actions::help_msg = "";
+local $help_msg = "";
 
 
 sub actions::send_help($)
 {
 	$eml_data = $_[0];
+
 
 	return -1;
 }

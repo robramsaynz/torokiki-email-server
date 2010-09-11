@@ -43,8 +43,8 @@ sub validate_email::check_torokiki_object_locations($)
 	#	- any "www." supplied is removed.
 	# 	- any trailing '/' is trimmed.
 	$content_url =~ m{http://(www.)?([^/]+)(.+)/?};
-	my $server = "http://$1"; 	
-	my $content_location = $2; 	
+	my $server = "http://$2"; 	
+	my $content_location = $3; 	
 
 	if ($server ne "http://torokiki.net")
 	{
@@ -55,11 +55,12 @@ sub validate_email::check_torokiki_object_locations($)
 
 	# ie /(image)/(123)/(response)(/456)?
 	# note: the response-content (456) is optional.
-	$content_location =~ m{/([^/])+/([^/]+)/([^/]+)(/[^/]+)?};
+	$content_location =~ m{/([^/]+)/([^/]+)/([^/]+)(/[^/]+)?};
 	my $seed_cont_type = $1;
 	my $seed_cont_id = $2;
 	my $response = $3;
 	my $response_cont_id = $4;
+
 
 	# ie image
 	# Note we only take image content types at this stage.
@@ -79,8 +80,7 @@ sub validate_email::check_torokiki_object_locations($)
 #	}
 
 	# ie response
-	if ($response eq "response"
-	if ($1 ne "http://(torokiki.net")
+	if ($response ne "response")
 	{
 		warn	"Error checking content-url: $content_url\n".
 				"this should be 'response': $response\n";
@@ -100,4 +100,4 @@ sub validate_email::check_torokiki_object_locations($)
 
 
 
-
+1;

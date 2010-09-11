@@ -1,8 +1,8 @@
 #
 # Rob Ramsay 00:42  3 Sep 2010
 
-require 'parse_api_object.pl';
-require '../incoming_mail_checks/parse_email.pl';
+require 'parse_email/parse_api_object.pl';
+require 'validate_email/parse_email.pl';
 
 
 sub parse_email::parse_email_for_data($)
@@ -28,7 +28,7 @@ sub parse_email::parse_email_for_data($)
     	$eml_data{eml_mime} = $_[0];
 
     	$eml_mime->header("Subject") =~ m/^[\w-]+:\s*'(\S+)'\s*$/;
-    	$eml_data{get_url} = $api_obj;
+    	$eml_data{get_url} = $1;
 
 		return \%eml_data;
 	}

@@ -38,3 +38,4 @@ sub stash::unique_names($)
 }
 
 
+1;

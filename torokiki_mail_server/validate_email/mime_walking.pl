@@ -30,7 +30,7 @@ sub validate_email::return_mime_attach_num_recurs($$$)
 	my $num_attach_ref = $_[2];		# pointer to number of attachments.
 
 
-	if ( &is_mime_obj_attach($_) )
+	if ( &validate_email::is_mime_obj_attach($eml_mime) )
 	# it's an attachement.
 	{ 
 		$$num_attachs_ref++;
@@ -58,7 +58,7 @@ sub validate_email::return_mime_attach_num_recurs($$$)
 				if ($obj)
 					{ return $_; }
 			}
-			elsif ( &is_mime_obj_attach($_) )
+			elsif ( &validate_email::is_mime_obj_attach($_) )
 			{
 				$$num_attachs_ref++;
 
@@ -80,7 +80,7 @@ sub validate_email::count_mime_attach_recurs($)
 	my $eml_mime = $_[0];
 
 
-	if ( &is_mime_obj_attach($_) )
+	if ( &validate_email::is_mime_obj_attach($eml_mime) )
 	# it's an attachement.
 	{ 
 		return 1; 
@@ -102,7 +102,7 @@ sub validate_email::count_mime_attach_recurs($)
 			{
 				$num_attachs +=	&count_mime_attach_recurs($_);
 			}
-			elsif ( &is_mime_obj_attach($_) )
+			elsif ( &validate_email::is_mime_obj_attach($_) )
 			{
 				$num_attachs++;
 			}
@@ -120,11 +120,11 @@ sub validate_email::is_mime_obj_attach($)
 
 	# ??: !! Attachements are non-text non mime-hierarchy, and 
 	# ??: !! this list is very incomplete, and needs updating.
-	if ($_->content_type =~ m{text/plain})
+	if ($eml_mime->content_type =~ m{text/plain})
 		{ return undef; }
-	elsif ($_->content_type =~ m{text/html})
+	elsif ($eml_mime->content_type =~ m{text/html})
 		{ return undef; }
-	elsif ($_->content_type =~ m{multipart/.+})
+	elsif ($eml_mime->content_type =~ m{multipart/.+})
 		{ return undef; }
 	else
 		{ return 1; }

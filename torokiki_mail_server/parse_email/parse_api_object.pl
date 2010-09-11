@@ -5,9 +5,6 @@
 # Rob Ramsay 00:33  3 Sep 2010
 
 
-# !! this const is also declared in other files (ie data-dupl.)
-use constant TOROKIKI_SERVER_VERS => "0.1";
-
 #{
 #    'Submitter' : 'sam@silverstripe.com',
 #    'Text' : 'This is a text response',
@@ -34,7 +31,7 @@ sub parse_email::get_api_obj_from_email($)
 
 
 	my $text = &validate_email::get_email_txt($eml_mime);
-	my %tags = &validate_email::tag_value_pairs_to_hash($text);
+	my $tags = &validate_email::tag_value_pairs_to_hash($text);
 
 	# ??: Should check for and remove: remove me <save@me>
 	$api_obj->{Submitter} = $tags->header("From");
