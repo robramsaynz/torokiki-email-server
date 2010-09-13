@@ -10,13 +10,23 @@ sub actions::get_content($)
 	my $eml_data = $_[0];
 
 
-	if ( $eml_data->{get_url} )
-	{
-		return &comms::get_content_from_torokiki_server( $eml_data->{get_url} );
-	}
-	else
+	unless ( $eml_data->{get_url} )
 	{
 		return (undef, "\$eml_data->{get_url} not filled out.");
+	}
+
+
+	my ($err, $rtn) = &comms::get_content_from_torokiki_server( $eml_data->{get_url} );
+	
+	if ($err) 
+	{
+		&comms::send_get_succeeded_reply($eml_data);
+		return 1;
+	}
+	else
+	{ 
+		&comms::send_get_failed_reply($eml_data);
+		return (undef, "$rtn"); 
 	}
 }
 

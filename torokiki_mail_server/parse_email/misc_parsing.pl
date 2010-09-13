@@ -4,6 +4,7 @@
 
 use strict;
 
+
 # See http://torokiki.net/docs/mailserver-command-spec.md for a description 
 # of what a help message looks like.
 sub parse_email::is_help_message($)
@@ -87,7 +88,9 @@ sub parse_email::convert_html_email_to_txt($)
     # ??: Needs replacing with something proper.
     my $filename = "grock.pl.tmp";
 
-    open FILE, ">", "$filename" or die "Couldn't open grock.pl.tmp\n";
+    open FILE, ">", "$filename" 
+			or warn "Couldn't open $filename\n"
+			and return undef;
     print FILE $eml_mime->body();
     close FILE;
 

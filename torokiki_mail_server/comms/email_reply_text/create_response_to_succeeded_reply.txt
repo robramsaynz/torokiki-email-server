@@ -1,0 +1,6 @@
+#
+# You're response to
+#    $url_responded_to
+# was successfull has been saved at:
+#    $response_content_url
+#

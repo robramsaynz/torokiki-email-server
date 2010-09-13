@@ -54,12 +54,10 @@ use File::Basename;
 require 'validate_email/check_email.pl';
 require 'parse_email/parse_email_for_data.pl';
 require 'comms/http_torokiki_api.pl';
+require 'comms/send_email.pl';
 require 'actions/run_action.pl';
 require 'stash/stash.pl';
 
-
-## Needed to have c-style function-local vars with state.
-#use feature 'state';    
 
 
 # ---------------- Globals ---------------- 
@@ -127,12 +125,7 @@ sub process_email($)
 
 	# Validate
 	if (! &validate_email::is_valid_email($eml_mime) )
-	{
-        my $filename = &stash::stash_erroneous_email($eml_txt);
-#		send_mail::invalid_mail_reply($eml_mime);
-		warn "Invalid email! Ignored and saved as $filename\n";
-		exit -1;
-	}
+		{ &exit_on_invalid_email($eml_mime, $eml_txt); }
 
 	# Munge
 	my $eml_data = &parse_email::parse_email_for_data($eml_mime);
@@ -141,4 +134,18 @@ sub process_email($)
 	&actions::run_action($eml_data);
 }
 
+
+sub exit_on_invalid_email($$)
+{
+	my $eml_mime = $_[0];
+	my $eml_txt = $_[1];
+
+
+	my $filename = &stash::stash_erroneous_email($eml_txt);
+	warn "Invalid email! Ignored and saved as $filename\n";
+
+	&comms::send_invalid_mail_reply($eml_mime);
+	
+	exit -1;
+}
 

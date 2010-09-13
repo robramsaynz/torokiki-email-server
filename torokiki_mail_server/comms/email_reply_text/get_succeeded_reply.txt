@@ -1,0 +1,5 @@
+#
+# You're request for 
+#    $get_url_responded_to
+# was successfull. The file is attached to this email.
+#

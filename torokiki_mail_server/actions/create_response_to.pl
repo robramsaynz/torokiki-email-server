@@ -8,18 +8,29 @@ use strict;
 #use comms::http_torokiki_api;
 require 'comms/http_torokiki_api.pl';
 
+
 sub actions::create_response_to_content($)
 {
 	my $eml_data = $_[0];
 
 	
-	if ( $eml_data->{api_obj} )
+	unless ( $eml_data->{api_obj} )
 	{
-		return &comms::send_api_obj_to_torokiki_server( $eml_data->{api_obj} );
+		return (undef, "\$eml_data->{api_obj} not filled out.");
+	}
+
+
+	my ($err, $rtn) = &comms::send_api_obj_to_torokiki_server( $eml_data->{api_obj} );
+
+	if ($err)
+	{
+		&comms::send_create_response_to_succeeded_reply($eml_data);
+		return 1;
 	}
 	else
 	{
-		return (undef, "\$eml_data->{api_obj} not filled out.");
+		&comms::send_create_response_to_failed_reply($eml_data);
+		return undef;
 	}
 }
 

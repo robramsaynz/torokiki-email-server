@@ -1,0 +1,7 @@
+#
+# Your email couldn't be processed by the Torokiki email-gateway (it's syntax 
+# was invalid).
+#
+# You can get help documentation, by sending an email with nothing but 'help' 
+# in the subject to this address.
+# 

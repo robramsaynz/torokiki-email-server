@@ -1,0 +1,12 @@
+#
+# The file
+#    $get_url
+# couldn't be retrieved. Either this file doesn't exit, or there may was a 
+# problem connecting to the website. 
+#
+# Trying to view this file in a web-browser is a more reliable way of 
+# accessing it.
+#
+# You can get help documentation, by sending an email with nothing but 'help' 
+# in the subject to this address.
+# 

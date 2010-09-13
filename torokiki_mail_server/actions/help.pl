@@ -5,15 +5,13 @@
 use strict;
 
 
-local $actions::help_msg = "";
-
-
 sub actions::send_help($)
 {
 	my $eml_data = $_[0];
 
 
-	return -1;
+	&comms::send_help_reply($eml_data);
+	return 1;
 }
 
 

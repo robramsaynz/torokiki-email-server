@@ -60,7 +60,7 @@ warn "$api_obj_as_txt\n";
 warn "--------------------------------\n";
 
 my $response;
-exit 0;
+return ( 1, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
 
 if (undef){
 # --------------------------------
@@ -126,7 +126,7 @@ warn "$content_url\n";
 warn "--------------------------------\n";
 
 my $response;
-exit 0;
+return ( 1, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
 
 if (undef){
 # --------------------------------

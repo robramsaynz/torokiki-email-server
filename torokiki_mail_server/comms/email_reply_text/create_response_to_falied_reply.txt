@@ -1,0 +1,12 @@
+#
+# You're response to
+#    $url_responded_to
+# couldn't be saved.
+#
+# This may be an unsupported file type, or there may was a problem connecting 
+# to the website. 
+#
+# You can get help documentation, by sending an email with nothing but 'help' 
+# in the subject to this address.
+# 
+
