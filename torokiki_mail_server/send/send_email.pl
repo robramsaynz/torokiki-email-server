@@ -6,21 +6,21 @@ use Email::MIME::Creator;
 
 
 # Note that this takes eml_mime, whereas the the other fn's tak eml_data.
-sub comms::send_invalid_mail_reply($)
+sub send::send_invalid_mail_reply($)
 {
 	my $eml_mime = $_[0];
 
 
-	my $filename = "comms/email_reply_text/invalid_mail_reply.txt";
-	my $file_text = &comms::slurp_file($filename);
+	my $filename = "send/email_reply_text/invalid_mail_reply.txt";
+	my $file_text = &send::slurp_file($filename);
 
 	unless ($file_text)
 	{ 
-		warn "comms::send_invalid_mail_reply(): Email not sent.\n";
+		warn "send::send_invalid_mail_reply(): Email not sent.\n";
 		return undef;
 	 }
 
-	my $rtn = 	&comms::send_text_email(
+	my $rtn = 	&send::send_text_email(
 					$eml_mime->header(From),
 					"error: 'Invalid email format'",
 					$file_text
@@ -28,7 +28,7 @@ sub comms::send_invalid_mail_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "comms::send_invalid_mail_reply(): Email not sent.\n";
+		warn "send::send_invalid_mail_reply(): Email not sent.\n";
 		return undef;
 	}
 
@@ -36,23 +36,23 @@ sub comms::send_invalid_mail_reply($)
 }
 
 
-sub comms::send_help_reply($)
+sub send::send_help_reply($)
 {
 	my $eml_data = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
 	my $get_url = $eml_data->{get_url};
 
 
-	my $filename = "comms/email_reply_text/help_reply.txt";
-	my $file_text = &comms::slurp_file($filename);
+	my $filename = "send/email_reply_text/help_reply.txt";
+	my $file_text = &send::slurp_file($filename);
 
 	unless ($file_text)
 	{ 
-		warn "comms::send_help_reply(): Email not sent.\n";
+		warn "send::send_help_reply(): Email not sent.\n";
 		return undef;
 	 }
 
-	my $rtn = 	&comms::send_text_email(
+	my $rtn = 	&send::send_text_email(
 					$eml_mime->header(From),
 					"msg: 'Torokiki Email Gateway Help'",
 					$file_text
@@ -60,7 +60,7 @@ sub comms::send_help_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "comms::send_help_reply(): Email not sent.\n";
+		warn "send::send_help_reply(): Email not sent.\n";
 		return undef;
 	}
 
@@ -68,23 +68,23 @@ sub comms::send_help_reply($)
 }
 
 
-sub comms::send_get_succeeded_reply($$)
+sub send::send_get_succeeded_reply($$)
 {
 	my $eml_data = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
 	my $get_url = $eml_data->{get_url};
 
 
-	my $filename = "comms/email_reply_text/get_succeeded_reply.txt";
-	my $file_text = &comms::slurp_file($filename);
+	my $filename = "send/email_reply_text/get_succeeded_reply.txt";
+	my $file_text = &send::slurp_file($filename);
 
 	unless ($file_text)
 	{ 
-		warn "comms::send_get_succeeded_reply(): Email not sent.\n";
+		warn "send::send_get_succeeded_reply(): Email not sent.\n";
 		return undef;
 	 }
 
-	my $rtn = 	&comms::send_text_email(
+	my $rtn = 	&send::send_text_email(
 					$eml_mime->header(From),
 					"msg: 'get succeeded'",
 					$file_text
@@ -92,30 +92,30 @@ sub comms::send_get_succeeded_reply($$)
 
 	unless ($rtn)
 	{ 
-		warn "comms::send_get_succeeded_reply(): Email not sent.\n";
+		warn "send::send_get_succeeded_reply(): Email not sent.\n";
 		return undef;
 	}
 
 	return $rtn;
 }
 
-sub comms::send_get_failed_reply($)
+sub send::send_get_failed_reply($)
 {
 	my $eml_data = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
 	my $get_url = $eml_data->{get_url};
 
 
-	my $filename = "comms/email_reply_text/get_failed_reply.txt";
-	my $file_text = &comms::slurp_file($filename);
+	my $filename = "send/email_reply_text/get_failed_reply.txt";
+	my $file_text = &send::slurp_file($filename);
 
 	unless ($file_text)
 	{ 
-		warn "comms::send_get_failed_reply(): Email not sent.\n";
+		warn "send::send_get_failed_reply(): Email not sent.\n";
 		return undef;
 	 }
 
-	my $rtn = 	&comms::send_text_email(	
+	my $rtn = 	&send::send_text_email(	
 					$eml_mime->header(From),
 					"error: 'get failed'",
 					$file_text
@@ -123,30 +123,30 @@ sub comms::send_get_failed_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "comms::send_get_failed_reply(): Email not sent.\n";
+		warn "send::send_get_failed_reply(): Email not sent.\n";
 		return undef;
 	}
 
 	return $rtn;
 }
 
-sub comms::send_create_response_to_succeeded_reply($$)
+sub send::send_create_response_to_succeeded_reply($$)
 {
 	my $eml_data = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
 	my $get_url = $eml_data->{get_url};
 
 
-	my $filename = "comms/email_reply_text/create_response_to_succeeded_reply.txt";
-	my $file_text = &comms::slurp_file($filename);
+	my $filename = "send/email_reply_text/create_response_to_succeeded_reply.txt";
+	my $file_text = &send::slurp_file($filename);
 
 	unless ($file_text)
 	{ 
-		warn "comms::send_create_response_to_succeeded_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_succeeded_reply(): Email not sent.\n";
 		return undef;
 	 }
 
-	my $rtn = 	&comms::send_text_email(
+	my $rtn = 	&send::send_text_email(
 					$eml_mime->header(From),
 					"msg: 'create-response-to succeeded'",
 					$file_text
@@ -154,30 +154,30 @@ sub comms::send_create_response_to_succeeded_reply($$)
 
 	unless ($rtn)
 	{ 
-		warn "comms::send_create_response_to_succeeded_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_succeeded_reply(): Email not sent.\n";
 		return undef;
 	}
 
 	return $rtn;
 }
 
-sub comms::send_create_response_to_falied_reply($)
+sub send::send_create_response_to_falied_reply($)
 {
 	my $eml_data = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
 	my $get_url = $eml_data->{get_url};
 
 
-	my $filename = "comms/email_reply_text/create_response_to_failed_reply.txt";
-	my $file_text = &comms::slurp_file($filename);
+	my $filename = "send/email_reply_text/create_response_to_failed_reply.txt";
+	my $file_text = &send::slurp_file($filename);
 
 	unless ($file_text)
 	{ 
-		warn "comms::send_create_response_to_falied_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_falied_reply(): Email not sent.\n";
 		return undef;
 	 }
 
-	my $rtn = 	&comms::send_text_email(
+	my $rtn = 	&send::send_text_email(
 					$eml_mime->header(From),
 					"error: 'create-response-to failed'",
 					$file_text
@@ -185,7 +185,7 @@ sub comms::send_create_response_to_falied_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "comms::send_create_response_to_falied_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_falied_reply(): Email not sent.\n";
 		return undef;
 	}
 
@@ -193,7 +193,7 @@ sub comms::send_create_response_to_falied_reply($)
 }
 
 
-sub comms::slurp_file($)
+sub send::slurp_file($)
 {
 	my $filename = $_[0];
 
@@ -201,7 +201,7 @@ sub comms::slurp_file($)
 
 
 	open FILE, "<", $filename 
-			or warn "Error. Couldn't open $fil_name.\n"
+			or warn "Error. Couldn't open $filename.\n"
 			and return undef;
 	{
 	local $/ = undef;   # read all of file
@@ -213,7 +213,7 @@ sub comms::slurp_file($)
 }
 
 
-sub comms::send_text_email()
+sub send::send_text_email()
 {
 	my $to		= $_[0];
 	my $subj	= $_[1];
@@ -229,13 +229,13 @@ sub comms::send_text_email()
 		body => $text,
 	);
 
-	return &comm::send_email_mime_obj($eml_mime);
+	return &send::send_email_mime_obj($eml_mime);
 }
 
 
 
 
-sub comm::send_email_mime_obj($)
+sub send::send_email_mime_obj($)
 {
     my $eml_mime = $_[0];	# shoud be a ref to an Email::MIME object.
 

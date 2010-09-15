@@ -7,6 +7,7 @@ use strict;
 
 #use comms::http_torokiki_api;
 require 'comms/http_torokiki_api.pl';
+require 'send/send_email.pl';
 
 
 sub actions::create_response_to_content($)
@@ -24,12 +25,12 @@ sub actions::create_response_to_content($)
 
 	if ($err)
 	{
-		&comms::send_create_response_to_succeeded_reply($eml_data);
+		&send::send_create_response_to_succeeded_reply($eml_data);
 		return 1;
 	}
 	else
 	{
-		&comms::send_create_response_to_failed_reply($eml_data);
+		&send::send_create_response_to_failed_reply($eml_data);
 		return undef;
 	}
 }

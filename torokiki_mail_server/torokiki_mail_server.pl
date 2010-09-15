@@ -53,8 +53,8 @@ use File::Basename;
 
 require 'validate_email/check_email.pl';
 require 'parse_email/parse_email_for_data.pl';
-require 'comms/http_torokiki_api.pl';
-require 'comms/send_email.pl';
+#require 'comms/http_torokiki_api.pl';
+require 'send/send_email.pl';
 require 'actions/run_action.pl';
 require 'stash/stash.pl';
 
@@ -144,7 +144,7 @@ sub exit_on_invalid_email($$)
 	my $filename = &stash::stash_erroneous_email($eml_txt);
 	warn "Invalid email! Ignored and saved as $filename\n";
 
-	&comms::send_invalid_mail_reply($eml_mime);
+	&send::send_invalid_mail_reply($eml_mime);
 	
 	exit -1;
 }

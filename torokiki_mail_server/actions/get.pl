@@ -4,6 +4,8 @@
 
 use strict;
 
+require 'send/send_email.pl';
+
 
 sub actions::get_content($)
 {
@@ -20,12 +22,12 @@ sub actions::get_content($)
 	
 	if ($err) 
 	{
-		&comms::send_get_succeeded_reply($eml_data);
+		&send::send_get_succeeded_reply($eml_data);
 		return 1;
 	}
 	else
 	{ 
-		&comms::send_get_failed_reply($eml_data);
+		&send::send_get_failed_reply($eml_data);
 		return (undef, "$rtn"); 
 	}
 }
