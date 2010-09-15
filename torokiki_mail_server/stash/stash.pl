@@ -18,7 +18,7 @@ sub stash::stash_erroneous_email($)
 	my $eml_text = $_[0]; 
  
  
-	my $filename = &stash::unique_names(stash::ERROR_DIR); 
+	my $filename = &stash::unique_names(stash::ERROR_STASH_DIR); 
 	 
 	if ($filename) 
 	{ 
@@ -58,9 +58,6 @@ sub stash::stash_failed_send($)
 	{
 		return undef;
 	}
-}
-
-
 }
 
 
