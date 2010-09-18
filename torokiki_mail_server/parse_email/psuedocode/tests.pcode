@@ -1,0 +1,58 @@
+#
+# # Tag parsing notes #
+#
+# Comments can occur before or after "tag: 'value' pairs", and cause 
+# everything from the '#' to the end of the line to be ignored.
+# ie 
+# 
+# 	# this
+# 	tag1: 'value1'
+# 	#this 
+# 	tag2 : 
+# 	'value2' # this
+# 	# and this are valid comments";
+# 
+# but
+# 
+# 	tag1:
+# 	# this
+# 	: 'value2' 
+# 	tag2 # or this aren't
+# 	: 'value2' 
+# 
+
+my $test1 = "
+# This is valid
+tag1: 'value2'
+tag2: 'value2'";
+
+my $test2 = "
+# Help I've got single quotes 
+tag1: 'value with #'
+tag2: 'multiline value with
+#tags to make it complex'
+";
+
+my $test3 = "
+# comment1
+  tag1 : 'value1' # comment 2
+tag2: 'value3';
+
+my $error3 = "
+# comment1
+  tag1 :
+#_this_should_be_an_error.
+ 'value1' # comment 2
+tag2: 
+# this should be also be an error.
+'value3';
+
+
+
+$test4 = "
+   # this
+tag1: 'value1'
+# this
+tag2 : 
+'value2' # this
+# and this are valid comments";

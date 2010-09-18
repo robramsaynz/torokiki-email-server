@@ -1,0 +1,33 @@
+
+# This method will recognise all of these as comments
+#	# comment
+#	tag
+# # comment
+# : 
+# # comment  
+# 'value' # comment
+# 
+
+#
+# It won't allow "'"s in the comments or it will fail. Fixing this would 
+# involve array walking, and heaving combining/removing elements. In this case 
+# it would be easier to just go to a char by char parser.
+#
+
+count = 0
+for (@chunks)
+{
+	if (count %2 eq 0) # ie tag
+	{
+		# Replace multiple #... lines if this is a tag.
+		chunk =~ s/\s*#.*$//gm
+	}
+	else 
+	{
+		# ignore comments in 'values' 
+		undef;
+	}
+}
+
+
+

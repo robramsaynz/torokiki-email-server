@@ -107,6 +107,23 @@ sub parse_email::convert_html_email_to_txt($)
 # ??: this would be easier to read and modify, and would work by reading a 
 # ??: char at a time, looking for :/\s/"/\/... flags.
 #
+#
+# A note on comments:
+# 	This method will recognise all of these as comments
+#	"	# comment
+#	tag
+# 	# comment
+# 	: 
+# 	# comment  
+# 	'value' # comment"
+#
+# 	It won't allow "'"s in the comments or you normal tag parsing will fail
+# 	in unknown ways.
+# 	Fixing this would involve array walking, and heaving 
+#	combining/removing elements. In this case it would be easier to just 
+#	go to a char by char parser.
+#
+#
 # Returns:  \%hash
 #           -1: got something not a tag (ie name:) while expecting a tag.
 #           -2: last <tag: "value"> pair missing <"value">
@@ -132,6 +149,11 @@ sub parse_email::tag_value_pairs_to_hash($)
     my $tag = undef;
     for (@split_txt)
     {
+
+#		# Replace anything from #... to the end of the line 
+#		# (multiple times) in this tag.
+#		s/#.*$//gm
+
         if (!$tag)
         {
             # Check the tag is valid.

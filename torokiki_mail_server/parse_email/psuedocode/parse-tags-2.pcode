@@ -1,0 +1,58 @@
+
+
+tag: 'value' => [   ]?[tag][  ]?[:][  ]?['value']...
+
+pre_tag_space
+comment (optional -  can only go in pre_tag_space
+tag
+post_tag_space
+colon
+post_colon_space
+value
+(... repeat)
+
+
+$state = "pre_tag_space";
+
+for each of those 
+	if ($state = "a")
+		if ($char =~ /[ValidChars]/)
+			$state = "a"
+			<possibly save char>
+		elsif ($char =~ /[nextstate]/)
+			$state = "b"
+			<possibly do something>
+		else
+			die angrilly
+
+
+pre_tag_space? (\s*)
+	->comment 
+	->tag
+
+comment? (#.*$)
+	->pre_tag_space
+	->tag
+
+tag (A-z-_)
+	->post_tag_space
+	->colon
+
+post_tag_space (\s*)
+	->colon
+
+colon (:)
+	->post_colon_space
+	->value
+
+post_colon_space (\s*)
+	->value
+
+value ('.*')
+	->pre_tag_space
+	->comment 
+	->tag
+
+
+
+
