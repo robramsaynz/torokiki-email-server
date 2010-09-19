@@ -8,8 +8,8 @@ require 'stash/misc_stash.pl';
 
 
 {package stash; 
-	use constant ERROR_STASH_DIR => "../email_stash/erroneous_emails"; 
-	use constant FALIED_SEND_STASH_DIR => "../email_stash/failed_sends"; 
+	use constant ERROR_STASH_DIR => 	"../logs/erroneous_emails"; 
+	use constant FALIED_SEND_STASH_DIR => 	"../logs/failed_sends"; 
 }
  
  
