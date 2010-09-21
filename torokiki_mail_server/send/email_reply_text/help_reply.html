@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="date" content="" />
+  <link rel="stylesheet" href="/home/rob/bin/var/dmd/documentation.css" type="text/css" />
+</head>
+<body>
+<div id="torokiki-mailserver-help"
+><h1
+  >Torokiki Mailserver Help</h1
+  ><p
+  >This mail is from the <a href="http://tk.gamedesignresource.com"
+    >Torokiki website</a
+    > email-gateway. The Torokiki website is an online community of users who view historical images of Wellington city, and create presonalised responses to these images.</p
+  ><p
+  >You can use this email-gateway to access content stored on the website, or submit responses to that content. For help on specific commands see:</p
+  ><ul
+  ><li
+    ><a href="#get-command"
+      >get Command</a
+      ></li
+    ><li
+    ><a href="#create-response-to-command"
+      >create-response-to Command</a
+      ></li
+    ><li
+    ><a href="#help-command"
+      >help Command</a
+      ></li
+    ></ul
+  ><p
+  >The basic syntax of Mailserver emails has a 'command:', and then the URL of any content being accessed, on the subject line. Other information is conveyed as tag/values pairs in the email's body. Binary content may be added as an attachment to the email.</p
+  ><pre
+  ><code
+    >--------------------------------
+to: this@email.address
+subject: command: http://tk.gamedesignresource.com/content/url
+--------------------------------
+tag1: 'tag1 value'
+tag2: 'tag1 value'
+--------------------------------
+mime-attachment
+--------------------------------
+</code
+    ></pre
+  ><div id="get-command"
+  ><h2
+    >'get' Command</h2
+    ><p
+    >This command lets you retrieve a piece of content off the website, (which will be sent to you in a reply email). In most cases it will be easier to go to the content's URL on the torokiki website.</p
+    ><p
+    >Here's an example</p
+    ><pre
+    ><code
+      >--------------------------------
+to: this@email.address
+subject: get: http://tk.gamedesignresource.com/123/resourse/456
+--------------------------------
+tag1: 'tag1 value'
+tag2: 'tag1 value'
+--------------------------------
+mime-attachment
+--------------------------------
+</code
+      ></pre
+    ><p
+    >In this case you could have just entered 'http://tk.gamedesignresource.com/image/123/response/456' in your browser, to view the content.</p
+    ></div
+  ><div id="create-response-to-command"
+  ><h2
+    >'create-response-to' Command</h2
+    ><p
+    >You can respond to Torokiki content using images, text, audio, video, or any other media type you like. You can also create tags for your content to group and organise it ('tags: lambtonquay trams' for instance).</p
+    ><p
+    >To create a png response to 'www.torokiki.net/image/123/response/456' you woud send something like,</p
+    ><pre
+    ><code
+      >--------------------------------
+to: this@email.address
+Subject: create-response-to: 'http://torokiki.net/image/123/response/456'
+---- Body ----------------------
+tags : 'lambtonquay transport bus'
+location : '123 Lambton quay'
+---- Attachment ----------------
+wellington-bus.png
+--------------------------------
+</code
+      ></pre
+    ><!--
+!!!! I'm not sure that the server can takes non image responses at this stage. !!!!
+
+To create a text response to 'www.torokiki.net/image/123/response/456' you woud send something like,
+
+    ================================
+    to: this@email.address
+    subject: create-response-to: 'http://torokiki.net/image/123/response/456'
+    ==== Body ======================
+    text : 'These routes are now plied by a petrol based bus service.'
+    tags : 'lambtonquay transport bus'
+    ================================
+
+If the 'create-response-to' command succeeded, you'll get an reply letting you know the URL where you're content is located.
+-->
+
+
+
+</div
+  ><div id="help-command"
+  ><h2
+    >'help' Command</h2
+    ><p
+    >If you send an email with nothing by the word 'help' in it's body, or it's header, then you'll get this email back in reply. i.e.</p
+    ><pre
+    ><code
+      >--------------------------------
+To: time.capsule.testing@gmail.com
+Subject: help
+---- Body ----------------------
+--------------------------------
+
+--------------------------------
+To: time.capsule.testing@gmail.com
+Subject: 
+---- Body ----------------------
+help 
+--------------------------------
+</code
+      ></pre
+    ></div
+  ><div id="further-help"
+  ><h2
+    >Further help</h2
+    ><p
+    >If you have any further questions see the <a href="http://torokiki.net/docs/mailserver-command-spec.md"
+      >Torokiki Mailserver Spec</a
+      >.</p
+    ></div
+  ></div
+>
+</body>
+</html>
+

@@ -39,7 +39,7 @@ sub send::send_text_email($$$)
 
     my $eml_mime = Email::MIME->create(
         header => [ 
-#				From => 'casey@geeknest.com',
+				#From => 'casey@geeknest.com',
 				To => $to,
 				Subject => $subj,
 		],
@@ -68,11 +68,41 @@ sub send::send_text_and_attach_email($$$$)
 
     my $eml_mime = Email::MIME->create(
         header => [ 
-#				From => 'casey@geeknest.com',
+				#From => 'casey@geeknest.com',
 				To => $to,
 				Subject => $subj,
 		],
 		parts => ( $eml_text, $eml_attach )
+	);
+
+	return &send::send_email_mime_obj($eml_mime);
+}
+
+
+sub send::send_html_email($$$)
+{
+	my $to			= $_[0];
+	my $subj		= $_[1];
+	my $html_text	= $_[2];
+
+
+    my $html_part = Email::MIME->create(
+		 attributes => {
+			content_type => "text/html",
+			disposition  => "inline",
+			charset	  => "utf8",
+			#encoding	 => "quoted-printable",
+		 },
+		body => $html_text,
+	);
+
+    my $eml_mime = Email::MIME->create(
+        header => [ 
+				#From => 'casey@geeknest.com',
+				To => $to,
+				Subject => $subj,
+		],
+		parts => [ $html_part ],
 	);
 
 	return &send::send_email_mime_obj($eml_mime);

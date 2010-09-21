@@ -7,7 +7,7 @@ sub send::send_help_reply($)
 	my $get_url = $eml_data->{get_url};
 
 
-	my $filename = "send/email_reply_text/help_reply.txt";
+	my $filename = "send/email_reply_text/help_reply.html";
 	my $file_text = &send::slurp_file($filename);
 
 	unless (defined $file_text)
@@ -16,7 +16,7 @@ sub send::send_help_reply($)
 		return undef;
 	 }
 
-	my $rtn = 	&send::send_text_email(
+	my $rtn = 	&send::send_html_email(
 					$eml_mime->header(From),
 					"msg: 'Torokiki Email Gateway Help'",
 					$file_text
