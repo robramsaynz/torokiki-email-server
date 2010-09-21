@@ -120,8 +120,10 @@ sub process_email($)
     my $eml_mime = Email::MIME->new($eml_txt);
 
 	# Print from header.
-    print "\n";
-    print "Processing mail from:  ". $eml_mime->header("From") ."\n";
+    print "Processing mail\n";
+	print "  |-> ". gmtime() ."\n"; 
+	print "  |-> ". $eml_mime->header("From") ."\n";
+    print "  +-> ". $eml_mime->header("Subject") ."\n";
 
 	# Validate
 	if (! &validate_email::is_valid_email($eml_mime) )
