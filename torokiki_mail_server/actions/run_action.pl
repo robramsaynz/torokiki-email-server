@@ -18,7 +18,7 @@ sub actions::run_action($)
 	# The help message has different syntax to the rest of the system
 	if ( &parse_email::is_help_message($eml_data->{eml_mime}) )
 	{ 
-		return &actions::send_help($eml_data->{eml_mime});
+		return &actions::send_help($eml_data);
 	}
 
 

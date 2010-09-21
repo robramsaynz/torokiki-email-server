@@ -11,11 +11,16 @@ sub parse_email::parse_email_for_data($)
 {
     my $eml_mime = $_[0];
 
+	my %eml_data; 
+
 
     # The help message has different syntax to the rest of the system,
 	# and are ignored.
     if ( &parse_email::is_help_message($eml_mime) )
-        { return undef; }
+    { 
+    	$eml_data{eml_mime} = $eml_mime;
+		return \%eml_data;
+	}
 
 
 	# Munge any data that an action requires.
@@ -24,10 +29,7 @@ sub parse_email::parse_email_for_data($)
 
 	if ( /^get:/i )
 	{
-		my %eml_data; 
-
-
-    	$eml_data{eml_mime} = $_[0];
+    	$eml_data{eml_mime} = $eml_mime;
 
     	$eml_mime->header("Subject") =~ m/^[\w-]+:\s*'(\S+)'\s*$/;
     	$eml_data{get_url} = $1;
@@ -36,12 +38,9 @@ sub parse_email::parse_email_for_data($)
 	}
 	elsif ( /^create-response-to:/i )
 	{ 
-		my %eml_data; 
-
-
 		$api_obj = &parse_email::get_api_obj_from_email($eml_mime);
 
-    	$eml_data{eml_mime} = $_[0];
+    	$eml_data{eml_mime} = $eml_mime;
     	$eml_data{api_obj} = $api_obj;
 
 		return \%eml_data;
@@ -50,5 +49,5 @@ sub parse_email::parse_email_for_data($)
 #	set-meta-data-for
 #	get-meta-data-for 
 
-	return undef;
+	return undef;	# Should never be reached.
 }

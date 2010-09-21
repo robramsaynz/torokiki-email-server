@@ -9,9 +9,9 @@ sub send::send_invalid_mail_reply($)
 	my $filename = "send/email_reply_text/invalid_mail_reply.txt";
 	my $file_text = &send::slurp_file($filename);
 
-	unless ($file_text)
+	unless (defined $file_text)
 	{ 
-		warn "send::send_invalid_mail_reply(): Email not sent.\n";
+		warn "send::send_invalid_mail_reply(): Couldn't read reply template. Email not sent.\n";
 		return undef;
 	 }
 
@@ -23,7 +23,7 @@ sub send::send_invalid_mail_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "send::send_invalid_mail_reply(): Email not sent.\n";
+		warn "send::send_invalid_mail_reply(): Email send failed.\n";
 		return undef;
 	}
 

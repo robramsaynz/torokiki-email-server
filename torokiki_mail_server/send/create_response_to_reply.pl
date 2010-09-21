@@ -10,9 +10,9 @@ sub send::send_create_response_to_succeeded_reply($)
 	my $filename = "send/email_reply_text/create_response_to_succeeded_reply.txt";
 	my $file_text = &send::slurp_file($filename);
 
-	unless ($file_text)
+	unless (defined $file_text)
 	{ 
-		warn "send::send_create_response_to_succeeded_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_succeeded_reply(): Couldn't read reply template. Email not sent.\n";
 		return undef;
 	 }
 
@@ -24,7 +24,7 @@ sub send::send_create_response_to_succeeded_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "send::send_create_response_to_succeeded_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_succeeded_reply(): Email send failed.\n";
 		return undef;
 	}
 
@@ -42,9 +42,9 @@ sub send::send_create_response_to_falied_reply($)
 	my $filename = "send/email_reply_text/create_response_to_failed_reply.txt";
 	my $file_text = &send::slurp_file($filename);
 
-	unless ($file_text)
+	unless (defined $file_text)
 	{ 
-		warn "send::send_create_response_to_falied_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_falied_reply(): Couldn't read reply template. Email not sent.\n";
 		return undef;
 	 }
 
@@ -56,7 +56,7 @@ sub send::send_create_response_to_falied_reply($)
 
 	unless ($rtn)
 	{ 
-		warn "send::send_create_response_to_falied_reply(): Email not sent.\n";
+		warn "send::send_create_response_to_falied_reply(): Email send failed.\n";
 		return undef;
 	}
 
