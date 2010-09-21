@@ -9,11 +9,13 @@
 #		  scripts are giving reasonable output.
 #
 
-# Setup env-vars for the tk.gamedesigneresource.com server with has
+# Setup env-vars for the tk.gamedesigneresource.com server which has
 # some componenets manually installed into the file-system.
-cd ../../missing-components/
-. setup.s
-cd $OLDPWD
+if [ "$(hostname)" = "jackson" ] ; then
+	cd ../../missing-components/
+	. setup.s
+	cd $OLDPWD
+fi
 
 
 # Clear log
