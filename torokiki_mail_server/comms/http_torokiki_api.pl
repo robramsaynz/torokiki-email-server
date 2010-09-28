@@ -41,7 +41,7 @@ sub comms::send_api_obj_to_torokiki_server($)
 
 
 	# Key to let this access the torokiki website.
-	my $x_api_key = "arandomX-API-Key";
+	my $x_api_key = "48d24e623c6dbbcd1175508727465a8c";
 
 
 
@@ -64,16 +64,16 @@ return ( 1, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
 
 if (undef){
 # --------------------------------
-	my $response = $user_agent->request(
-					POST "$server$seed_content",
-					[
-						#"POST /image/123/response HTTP/1.1"
-						#"Host" => "torokiki.net"
-						"Content-type" => "application/json",
-						"X-API-Key" => "$x_api_key",
-						Content => $api_obj_as_txt
-					]
-				);
+
+ 	my $request = HTTP::Request->new(POST => "$server$seed_content");
+	#$request->header("Host" => "torokiki.net");
+	$request->header("Content-type" => "application/json");
+	$request->header("X-API-Key" => "$x_api_key");
+	$request->content($api_obj_as_txt);
+
+#	print $request->as_string() . "\n";
+
+	my $response = $user_agent->request($request);
 # --------------------------------
 }
 # --------------------------------
@@ -83,19 +83,19 @@ if (undef){
 	{
 		return ( 1, $response->header("Location") );
 	}
-	elsif ($code =~ /5??/ && $code =~ /4??/)
+	elsif ($code =~ /5../ or $code =~ /4../)
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http push request to $server$content_location\n".
+		warn	"Error on http POST request to $server$content_location\n".
 				"Server returned error: ".$response->status_line()."\n";
 		return (undef, "http error");
 	}
 	else
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http push request to $server$content_location\n".
+		warn	"Error on http POST request to $server$content_location\n".
 				"Server returned error: ".$response->status_line()."\n" .
-				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!";
+				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!\n";
 		return (undef, "unknown http error");
 	}
 }
@@ -130,13 +130,12 @@ return ( 1, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
 
 if (undef){
 # --------------------------------
-	my $response = $user_agent->request(
-					GET "$content_url",
-					[
-						# GET http://torokiki.net/image/123/response/456 HTTP/1.1
-						"Accept" => "application/json",
-					]
-				);
+ 	my $request = HTTP::Request->new(GET => "$content_url");
+	$request->header("Accept" => "application/json");
+
+#	print $request->as_string() . "\n";
+
+	my $response = $user_agent->request($request);
 # --------------------------------
 }
 # --------------------------------
@@ -149,7 +148,7 @@ if (undef){
 	else
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
-		warn	"Error on http get request to $server$content_location\n".
+		warn	"Error on http GET request to $server$content_location\n".
 				"Expecting 200. Server returned error: ".$response->status_line();
 		return (undef, "http error");
 	}
