@@ -32,7 +32,7 @@ sub send::send_create_response_to_succeeded_reply($)
 }
 
 
-sub send::send_create_response_to_falied_reply($)
+sub send::send_create_response_to_failed_reply($)
 {
 	my $eml_data = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
