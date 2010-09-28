@@ -26,12 +26,12 @@ sub actions::create_response_to_content($)
 	if ($err)
 	{
 		&send::send_create_response_to_succeeded_reply($eml_data);
-		return 1;
+		return (1, "");
 	}
 	else
 	{
 		&send::send_create_response_to_failed_reply($eml_data);
-		return undef;
+		return (undef, "$rtn");
 	}
 }
 

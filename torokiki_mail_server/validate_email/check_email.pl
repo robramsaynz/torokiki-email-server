@@ -158,7 +158,7 @@ sub validate_email::is_valid_get_cmd($)
 	
 	if (&parse_email::count_mime_attach_recurs($eml_mime) != 0)
 	{ 
-		warn "validate_email::is_valid_get_cmd(): command must have no attachments.";
+		warn "validate_email::is_valid_get_cmd(): command must have no attachments.\n";
 		return undef; 
 	}
 
@@ -177,7 +177,7 @@ sub validate_email::is_valid_get_cmd($)
 	# Check for invalid tags.
 	for (keys %$tags)
 	{
-		warn "validate_email::is_valid_get_cmd(): command doesn't take tags (ie $tags->{$_}).";
+		warn "validate_email::is_valid_get_cmd(): command doesn't take tags (ie $tags->{$_}).\n";
 		return undef;
 	}
 
@@ -197,7 +197,7 @@ sub validate_email::is_valid_create_response_to_cmd($)
 	# ??: accept be text responses (which would mean 0 attachments).
 	if (&parse_email::count_mime_attach_recurs($eml_mime) != 1)
 	{
-		warn "validate_email::is_valid_create_response_to_cmd(): command must have one attachment.";
+		warn "validate_email::is_valid_create_response_to_cmd(): command must have one attachment.\n";
 		return undef; 
 	}
 
@@ -205,7 +205,7 @@ sub validate_email::is_valid_create_response_to_cmd($)
     my $eml_txt = &parse_email::get_email_txt($eml_mime);
 	unless ($eml_txt)
 	{
-		warn "validate_email::is_valid_create_response_to_cmd(): command must have text.";
+		warn "validate_email::is_valid_create_response_to_cmd(): command must have text.\n";
 		return undef; 
 	}
 
@@ -220,7 +220,7 @@ sub validate_email::is_valid_create_response_to_cmd($)
 	## Check for required tags.
 	#if ($tags->{something} eq undef)
 	#{
-	#	warn "'create-response-to' missing required tag: $tags->{$_}";
+	#	warn "'create-response-to' missing required tag: $tags->{$_}\n";
 	#	return undef;
 	#}
 
@@ -230,7 +230,7 @@ sub validate_email::is_valid_create_response_to_cmd($)
 		#if ( /tags/i || /objective/i|| /location/i || /text/i )
 		unless ( /tags/i || /objective/i || /location/i )
 		{
-			warn "validate_email::is_valid_create_response_to_cmd(): invalid tag: $_";
+			warn "validate_email::is_valid_create_response_to_cmd(): invalid tag: $_\n";
 			return undef;
 		}
 	}

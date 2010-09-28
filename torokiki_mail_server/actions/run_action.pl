@@ -30,7 +30,7 @@ sub actions::run_action($)
 
 		unless ($rtn)
 		{
-			warn "Error running 'get' action: $msg";
+			warn "Error running 'get' action: $msg\n";
 			return undef;
 		}
 
@@ -42,7 +42,7 @@ sub actions::run_action($)
 
 		unless ($rtn)
 		{
-			warn "Error running 'create-response-to' action: $msg";
+			warn "Error running 'create-response-to' action: $msg\n";
 			return undef;
 		}
 

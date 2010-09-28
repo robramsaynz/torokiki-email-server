@@ -49,8 +49,9 @@ sub validate_email::check_torokiki_object_locations($)
 
 	if ($server ne "http://torokiki.net")
 	{
-		warn	"Error checking content-url: $content_url\n".
-				"Invalid server: $server\n";
+		warn 	"validate_email::check_torokiki_object_locations():\n".
+				"   Error checking content-url: $content_url\n".
+				"   Invalid server: $server\n";
 		return undef;
 	}
 
@@ -67,32 +68,36 @@ sub validate_email::check_torokiki_object_locations($)
 	# Note we only take image content types at this stage.
 	if ($seed_cont_type ne "image")
 	{
-		warn	"Error checking content-url: $content_url\n".
-				"Invalid seed content type: $seed_cont_type\n";
+		warn 	"validate_email::check_torokiki_object_locations():\n".
+				"   Error checking content-url: $content_url\n".
+				"   Invalid seed content type: $seed_cont_type\n";
 		return undef;
 	}
 
 #	# ie 123
 #	if ($seed_cont_id ne "NOTCHECKED")
 #	{
-#		warn	"Error checking content-url: $content_url\n".
-#				"Invalid seed_cont_id: $seed_cont_id\n";
+#		warn 	"validate_email::check_torokiki_object_locations():\n".
+#				"   Error checking content-url: $content_url\n".
+#				"   Invalid seed_cont_id: $seed_cont_id\n";
 #		return undef;
 #	}
 
 	# ie response
 	if ($response ne "response")
 	{
-		warn	"Error checking content-url: $content_url\n".
-				"this should be 'response': $response\n";
+		warn 	"validate_email::check_torokiki_object_locations():\n".
+				"   Error checking content-url: $content_url\n".
+				"   this should be 'response': $response\n";
 		return undef;
 	}
 
 #	# ie 456
 #	if ($response_cont_id ne undef and $response_cont_id ne "NOTCHECKED")
 #	{
-#		warn	"Error checking content-url: $content_url\n".
-#				"Invalid response content id: $response_cont_id\n";
+#		warn 	"validate_email::check_torokiki_object_locations():\n".
+#				"   Error checking content-url: $content_url\n".
+#				"   Invalid response content id: $response_cont_id\n";
 #		return undef;
 #	}
 
