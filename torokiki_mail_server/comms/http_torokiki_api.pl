@@ -52,18 +52,12 @@ sub comms::send_api_obj_to_torokiki_server($)
 	my $user_agent = LWP::UserAgent->new();
 
 # --------------------------------
-warn "---- Actual content setting disabled. ----\n";
+#warn "---- Actual content setting disabled. ----\n";
 	# Convert to a JSON string.
 	my $api_obj_as_txt = JSON::PP->new->allow_nonref->utf8->pretty->encode($api_obj);
-warn "---- \$api_obj_as_txt ----\n";
-warn "$api_obj_as_txt\n";
-warn "--------------------------------\n";
-
-my $response;
-return ( 1, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
-
-if (undef){
-# --------------------------------
+#warn "---- \$api_obj_as_txt ----\n";
+#warn "$api_obj_as_txt\n";
+#warn "--------------------------------\n";
 
  	my $request = HTTP::Request->new(POST => "$server$seed_content");
 	#$request->header("Host" => "torokiki.net");
@@ -75,11 +69,9 @@ if (undef){
 
 	my $response = $user_agent->request($request);
 # --------------------------------
-}
-# --------------------------------
 
 	my $code = $response->code();
-	if ($code =~ /301/)
+	if ($code =~ /301/ or $code =~ /302/)
 	{
 		return ( 1, $response->header("Location") );
 	}
@@ -120,24 +112,17 @@ sub comms::get_content_from_torokiki_server()
 	my $user_agent = LWP::UserAgent->new();
 
 # --------------------------------
-warn "---- Actual content getting disabled. ----\n";
-warn "---- \$conent_url ----\n";
-warn "$content_url\n";
-warn "--------------------------------\n";
+#warn "---- Actual content getting disabled. ----\n";
+#warn "---- \$conent_url ----\n";
+#warn "$content_url\n";
+#warn "--------------------------------\n";
 
-my $response;
-return ( 1, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
-
-if (undef){
-# --------------------------------
  	my $request = HTTP::Request->new(GET => "$content_url");
 	$request->header("Accept" => "application/json");
 
 #	print $request->as_string() . "\n";
 
 	my $response = $user_agent->request($request);
-# --------------------------------
-}
 # --------------------------------
 
 	my $code = $response->code();

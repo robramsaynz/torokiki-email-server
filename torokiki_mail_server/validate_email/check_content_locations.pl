@@ -84,7 +84,7 @@ sub validate_email::check_torokiki_object_locations($)
 #	}
 
 	# ie response
-	if ($response ne "response")
+	if ($response ne "response" && $response ne "respond" )
 	{
 		warn 	"validate_email::check_torokiki_object_locations():\n".
 				"   Error checking content-url: $content_url\n".
