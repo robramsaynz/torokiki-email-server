@@ -7,7 +7,7 @@ use strict;
 
 #use comms::http_torokiki_api;
 require 'comms/http_torokiki_api.pl';
-require 'send/send_email.pl';
+require 'send/send_emails.pl';
 
 
 sub actions::create_response_to_content($)

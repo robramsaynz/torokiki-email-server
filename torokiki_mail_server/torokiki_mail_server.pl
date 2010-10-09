@@ -54,7 +54,7 @@ use File::Basename;
 require 'validate_email/check_email.pl';
 require 'parse_email/parse_email_for_data.pl';
 #require 'comms/http_torokiki_api.pl';
-require 'send/send_email.pl';
+require 'send/send_emails.pl';
 require 'actions/run_action.pl';
 require 'stash/stash.pl';
 

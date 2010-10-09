@@ -4,7 +4,7 @@
 
 use strict;
 
-require 'send/send_email.pl';
+require 'send/send_emails.pl';
 
 
 sub actions::send_help($)
