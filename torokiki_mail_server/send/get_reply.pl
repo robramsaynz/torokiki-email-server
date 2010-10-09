@@ -1,4 +1,6 @@
 
+use IO::All;
+
 
 sub send::send_get_succeeded_reply($$)
 {
@@ -9,7 +11,7 @@ sub send::send_get_succeeded_reply($$)
 
 
 	my $filename = "send/email_reply_text/get_succeeded_reply.txt";
-	my $file_text = &send::slurp_file($filename);
+	my $file_text = io($filename)->all;
 
 	unless (defined $file_text)
 	{ 
@@ -43,7 +45,7 @@ sub send::send_get_failed_reply($)
 
 
 	my $filename = "send/email_reply_text/get_failed_reply.txt";
-	my $file_text = &send::slurp_file($filename);
+	my $file_text = io($filename)->all;
 
 	unless (defined $file_text)
 	{ 

@@ -1,4 +1,6 @@
 
+use IO::All;
+
 
 sub send::send_help_reply($)
 {
@@ -8,7 +10,7 @@ sub send::send_help_reply($)
 
 
 	my $filename = "send/email_reply_text/help_reply.html";
-	my $file_text = &send::slurp_file($filename);
+	my $file_text = io($filename)->all;
 
 	unless (defined $file_text)
 	{ 

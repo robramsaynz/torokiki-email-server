@@ -1,4 +1,6 @@
 
+use IO::All;
+
 
 # Note that this takes eml_mime, whereas the other similar fn's take eml_data.
 sub send::send_invalid_mail_reply($)
@@ -7,7 +9,7 @@ sub send::send_invalid_mail_reply($)
 
 
 	my $filename = "send/email_reply_text/invalid_mail_reply.txt";
-	my $file_text = &send::slurp_file($filename);
+	my $file_text = io($filename)->all;
 
 	unless (defined $file_text)
 	{ 
