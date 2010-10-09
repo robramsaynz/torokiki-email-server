@@ -27,16 +27,6 @@ sub main()
 						$base64_txt
 					);
 
-	print STDERR "\n";
-	print STDERR "---- Note: 'Subroutine main::io redefined ----\n";
-	print STDERR "This warning isn't really a error and can be ignored.it's because \n";
-	print STDERR "'use IO::All' is being called twice (via require).\n";
-	print STDERR "\n";
-	print STDERR "I think this is because IO::All is  more complex function which exports\n";
-	print STDERR "exports things into the main namespace, which causes problems because of\n";
-	print STDERR "my use of require.\n";
-	print STDERR "----------------------------------------------'\n";
-	print STDERR "\n";
 
 	print $mime_obj->as_string();
 

@@ -49,6 +49,7 @@ use Email::MIME;
 use JSON::PP;
 use File::Copy;
 use File::Basename;
+use IO::All;
 
 require 'validate_email/check_email.pl';
 require 'parse_email/parse_email_for_data.pl';

@@ -9,7 +9,7 @@ use strict;
 use Email::MIME;
 use MIME::Types;
 use File::Spec;
-use IO::All;
+#use IO::All;
 
 require 'send/misc_generate_mime.pl';
 

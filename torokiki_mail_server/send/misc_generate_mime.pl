@@ -9,7 +9,7 @@ use strict;
 use Email::MIME;
 use MIME::Types;
 use File::Spec;
-use IO::All;
+#use IO::All;
 
 
 sub send::mime_from_base64_string()
