@@ -5,7 +5,7 @@
 
 use strict;
 
-use Email::MIME::Creator;
+use Email::MIME;
 
 require 'send/create_response_to_reply.pl';
 require 'send/get_reply.pl';

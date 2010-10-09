@@ -6,7 +6,7 @@
 
 use strict;
 
-use Email::MIME::Creator;
+use Email::MIME;
 use MIME::Types;
 use File::Spec;
 use IO::All;
