@@ -3,6 +3,7 @@
 sub send::send_get_succeeded_reply($$)
 {
 	my $eml_data = $_[0];
+	my $api_obj = $_[0];
 	my $eml_mime = $eml_data->{eml_mime};
 	my $get_url = $eml_data->{get_url};
 
@@ -16,10 +17,12 @@ sub send::send_get_succeeded_reply($$)
 		return undef;
 	 }
 
-	my $rtn = 	&send::send_text_email(
+	my $rtn = 	&send::send_text_and_base64_attach_email(
 					$eml_mime->header(From),
 					"msg: 'get succeeded'",
-					$file_text
+					$file_text,
+					$api_obj->{Attachment}->{name},
+					$api_obj->{Attachment}->{data},
 				);
 
 	unless ($rtn)

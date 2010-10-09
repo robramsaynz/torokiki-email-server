@@ -22,7 +22,9 @@ sub actions::get_content($)
 	
 	if ($err) 
 	{
-		&send::send_get_succeeded_reply($eml_data);
+		my $api_obj = &parse_email::get_api_obj_from_string($rtn);
+
+		&send::send_get_succeeded_reply($eml_data, $api_obj);
 		return 1;
 	}
 	else

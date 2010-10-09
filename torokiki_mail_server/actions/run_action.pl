@@ -26,9 +26,9 @@ sub actions::run_action($)
 
 	if ( /^get:/i )
 	{ 
-		my ($rtn, $msg) = &actions::get_content($eml_data);
+		my ($err, $msg) = &actions::get_content($eml_data);
 
-		unless ($rtn)
+		unless ($err)
 		{
 			warn "Error running 'get' action: $msg\n";
 			return undef;
@@ -38,9 +38,9 @@ sub actions::run_action($)
 	}
 	elsif ( /^create-response-to:/i )
 	{ 
-		my ($rtn, $msg) = &actions::create_response_to_content($eml_data);
+		my ($err, $msg) = &actions::create_response_to_content($eml_data);
 
-		unless ($rtn)
+		unless ($err)
 		{
 			warn "Error running 'create-response-to' action: $msg\n";
 			return undef;

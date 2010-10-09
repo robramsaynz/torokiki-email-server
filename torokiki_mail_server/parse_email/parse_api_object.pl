@@ -7,6 +7,8 @@
 
 use strict;
 
+use JSON::PP;
+
 #require 'parse_email/mime_walking.pl';
 
 #{
@@ -64,6 +66,17 @@ sub parse_email::get_api_obj_from_email($)
     $api_obj->{APICaller}->{service} = "Torokiki Mailserver ".TOROKIKI_SERVER_VERS;
 	# ??: Not filled out at the moment (may need to be in the future): 
     $api_obj->{APICaller}->{id} = undef;
+
+	return $api_obj;
+}
+
+
+sub parse_email::get_api_obj_from_string($)
+{
+	my $string = $_[0];
+
+
+	my $api_obj = JSON::PP->new->utf8->decode($string);
 
 	return $api_obj;
 }

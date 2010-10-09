@@ -134,7 +134,7 @@ sub comms::get_content_from_torokiki_server()
 	{
 		# !! Check how errors are raised elsewhere. is this consistent?
 		warn	"Error on http GET request to $server$content_location\n".
-				"Expecting 200. Server returned error: ".$response->status_line();
+				"Expecting 200. Server returned error: ".$response->status_line()."\n";
 		return (undef, "http error");
 	}
 }

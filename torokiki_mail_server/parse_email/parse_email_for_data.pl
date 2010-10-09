@@ -51,3 +51,6 @@ sub parse_email::parse_email_for_data($)
 
 	return undef;	# Should never be reached.
 }
+
+
+1;
