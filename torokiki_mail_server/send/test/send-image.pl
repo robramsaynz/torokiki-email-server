@@ -1,4 +1,10 @@
 #!/usr/bin/perl
+#
+# Test sending of attachements using Email::MIME.
+#
+# Doesn't actually test torokiki server code.
+#
+# Rob Ramsay 13:33  9 Oct 2010
 
 use Email::MIME::Creator;
 use IO::All;

@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 #
-# Test by  sending of base64 strings by sending a pre-encoded base64 image.
+# Test that send/generate_emails.pl sends base64 strings.
+# Creates an image/text email and prints results.
+#
+# Rob Ramsay 13:33  9 Oct 2010
 
 use strict;
 
