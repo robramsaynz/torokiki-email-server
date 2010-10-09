@@ -1,6 +1,8 @@
 #
+# Functions that generate mime objects of different types 
+# (text/html/attachement/...) suitable for sending as emails 
 #
-#
+# Rob Ramsay 13:36  9 Oct 2010
 
 use strict;
 

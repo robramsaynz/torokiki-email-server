@@ -1,6 +1,7 @@
 # 
+# Functions that send emails of different kinds # (text/html/attachement/...)
 #
-#
+# Rob Ramsay 13:36  9 Oct 2010
 
 use strict;
 

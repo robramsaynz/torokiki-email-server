@@ -1,6 +1,8 @@
 #
+# Functions that generate mime objects from attachments (suitable for 
+# embedding in emails/mime-objects.)
 #
-#
+# Rob Ramsay 13:36  9 Oct 2010
 
 use strict;
 
