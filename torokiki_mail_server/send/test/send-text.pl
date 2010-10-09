@@ -6,7 +6,7 @@
 #
 # Rob Ramsay 13:33  9 Oct 2010
 
-use Email::MIME::Creator;
+use Email::MIME;
 use IO::All;
 
 
@@ -26,7 +26,7 @@ sub main()
 
 #	open MSMTP, "| cat -" or die "can't fork msmtp: $!";
 	my $rtn;
-	$rtn = open MSMTP, "| msmtp --read-recipients -C msmtp.torokiki.conf" 
+	$rtn = open MSMTP, "| msmtp --read-recipients -C msmtp.torokiki.conf";
 	unless ($rtn)
 		{ die "can't fork msmtp: $!\n"; }
 
