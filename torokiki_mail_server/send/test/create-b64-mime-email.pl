@@ -8,7 +8,7 @@ use IO::All;
 use MIME::Base64;
 use Email::MIME;
 
-require 'send/send_email.pl';
+require 'send/generate_emails.pl';
 
 
 sub main()
@@ -16,7 +16,7 @@ sub main()
 
 	my ($filename, $base64_txt) = &return_vars();
 
-	my $mime_obj = &send::send_text_and_base64_attach_email(
+	my $mime_obj = &send::create_text_and_base64_attach_email(
 						'hello@world',
 						'wa gwan',
 						"I have text",
