@@ -24,7 +24,7 @@ sub send::send_text_email($$$)
 
 sub send::send_text_and_file_attach_email($$$$)
 {
-    my $eml_attach  = &send::create_text_and_file_attach_email(@_);
+    my $eml_mime  = &send::create_text_and_file_attach_email(@_);
 
 	return &send::send_email_mime_obj($eml_mime);
 }

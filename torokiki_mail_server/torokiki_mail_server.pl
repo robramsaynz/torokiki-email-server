@@ -47,7 +47,6 @@ use strict;
 use Email::MIME;
 #use Encode;
 use JSON::PP;
-use IO::All;
 use File::Copy;
 use File::Basename;
 
