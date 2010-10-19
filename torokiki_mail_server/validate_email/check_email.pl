@@ -193,15 +193,6 @@ sub validate_email::is_valid_create_response_to_cmd($)
 	my $eml_mime = $_[0];
 
 
-	# ??: at the moment, we require an image, but in the future this may 
-	# ??: accept be text responses (which would mean 0 attachments).
-	if (&parse_email::count_mime_attach_recurs($eml_mime) != 1)
-	{
-		warn "validate_email::is_valid_create_response_to_cmd(): command must have one attachment.\n";
-		return undef; 
-	}
-
-
     my $eml_txt = &parse_email::get_email_txt($eml_mime);
 	unless ($eml_txt)
 	{
@@ -227,11 +218,41 @@ sub validate_email::is_valid_create_response_to_cmd($)
 	# Check for invalid tags.
 	for (keys %$tags)
 	{
-		#if ( /tags/i || /objective/i|| /location/i || /text/i )
-		unless ( /tags/i || /objective/i || /location/i )
+		unless ( /tags/i || /objective/i || /location/i || /text/i )
 		{
 			warn "validate_email::is_valid_create_response_to_cmd(): invalid tag: $_\n";
 			return undef;
+		}
+	}
+
+	
+	# Check for correct number of attachments.
+	my $num_mime_atts = &parse_email::count_mime_attach_recurs($eml_mime);
+
+	# Text submissions.
+	if (defined $$tags{text})
+	{
+		if ($num_mime_atts ne 0)
+		{
+			warn	"validate_email::is_valid_create_response_to_cmd(): ".
+					"text submissions can't have attachments.\n";
+			return undef; 
+		}
+	}
+	# Video/image/etc submissions.
+	else
+	{
+		if ($num_mime_atts eq 0)
+		{
+			warn	"validate_email::is_valid_create_response_to_cmd(): ".
+					"non-text submissions without an attachement.\n";
+			return undef; 
+		}
+		elsif ($num_mime_atts ne 1)
+		{
+			warn	"validate_email::is_valid_create_response_to_cmd(): ".
+					"non-text submissions with more than one attachement.\n";
+			return undef; 
 		}
 	}
 
