@@ -56,8 +56,6 @@ To create a png response to 'www.torokiki.net/image/123/response/456' you woud s
 	wellington-bus.png
 	--------------------------------
 
-<!--
-!!!! I'm not sure that the server can takes non image responses at this stage. !!!!
 
 To create a text response to 'www.torokiki.net/image/123/response/456' you woud send something like,
 
@@ -68,11 +66,6 @@ To create a text response to 'www.torokiki.net/image/123/response/456' you woud 
 	text : 'These routes are now plied by a petrol based bus service.'
 	tags : 'lambtonquay transport bus'
 	================================
-
-If the 'create-response-to' command succeeded, you'll get an reply letting you know the URL where you're content is located.
--->
-
-
 
 
 ## 'help' Command

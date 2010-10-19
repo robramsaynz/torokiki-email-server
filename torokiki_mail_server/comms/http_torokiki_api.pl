@@ -22,7 +22,9 @@ use MIME::Base64;
 
 sub comms::send_api_obj_to_torokiki_server($)
 {
-	my $api_obj = $_[0];
+	my $eml_data = $_[0];
+
+	my $api_obj = $eml_data->{api_obj};
 
 
 	# For more info on what is being extracted here, read the file:
@@ -65,9 +67,17 @@ sub comms::send_api_obj_to_torokiki_server($)
 	$request->header("X-API-Key" => "$x_api_key");
 	$request->content($api_obj_as_txt);
 
-#	print $request->as_string() . "\n";
+#print "--------------------------------\n";
+#print $request->as_string() . "\n";
+#print "--------------------------------\n";
 
 	my $response = $user_agent->request($request);
+
+#print "================================\n";
+#print $response->as_string() . "\n";
+#print "================================\n";
+
+
 # --------------------------------
 
 	my $code = $response->code();
@@ -80,6 +90,8 @@ sub comms::send_api_obj_to_torokiki_server($)
 		# !! Check how errors are raised elsewhere. is this consistent?
 		warn	"Error on http POST request to $server$content_location\n".
 				"Server returned error: ".$response->status_line()."\n";
+		&comms::stash_http_fail($eml_data, $request, $response);
+
 		return (undef, "http error");
 	}
 	else
@@ -88,6 +100,8 @@ sub comms::send_api_obj_to_torokiki_server($)
 		warn	"Error on http POST request to $server$content_location\n".
 				"Server returned error: ".$response->status_line()."\n" .
 				"In theory only 301/4xx/5xx errors should be returned by a torokiki server!\n";
+		&comms::stash_http_fail($eml_data, $request, $response);
+
 		return (undef, "unknown http error");
 	}
 }
@@ -96,8 +110,10 @@ sub comms::send_api_obj_to_torokiki_server($)
 # Returns api_object.
 sub comms::get_content_from_torokiki_server()
 {
+	my $eml_data = $_[0];
+
 	# ie http://torokiki.net/image/123/response/456
-	my $content_url = $_[0];
+	my $content_url = $eml_data->{get_url};
 
 
 	# ie (http://torokiki.net)(/image/123/response/456)/?
@@ -135,8 +151,37 @@ sub comms::get_content_from_torokiki_server()
 		# !! Check how errors are raised elsewhere. is this consistent?
 		warn	"Error on http GET request to $server$content_location\n".
 				"Server returned error: ".$response->status_line()."\n";
+		&comms::stash_http_fail($eml_data, $request, $response);
+
 		return (undef, "http error");
 	}
+}
+
+
+sub comms::stash_http_fail($$$)
+{
+	my $eml_data = $_[0];
+	my $request = $_[1];
+	my $response = $_[2];
+
+
+	my $eml_txt = $eml_data->{eml_mime}->as_string();
+
+	my $http_text;
+	$http_text .= "\n";
+	$http_text .= "---------------- http request  ----------------\n";
+	$http_text .= $request->as_string() . "\n";
+	$http_text .= "-----------------------------------------------\n";
+	$http_text .= "\n";
+	$http_text .= "================ http response ================\n";
+	$http_text .= $response->as_string() . "\n";
+	$http_text .= "===============================================\n";
+	$http_text .= "\n";
+
+	my ($email_stash, $http_stash) = stash::stash_failed_http_request($eml_txt, $http_text);
+	warn "Email and request saved as $email_stash and $http_stash\n";
+
+	return 1;
 }
 
 

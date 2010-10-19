@@ -74,8 +74,8 @@ sub send::send_email_mime_obj($)
 		warn "msmtp returned: ".($? >> 8).">\n";
 
 		# Keep a record of fails, just in case. 
-		&stash::stash_failed_send($eml_mime->as_string);
-
+		my $filename = &stash::stash_failed_send($eml_mime->as_string);
+		warn "Couldn't send email! Email saved as $filename\n";
 		return undef;
 	}
 

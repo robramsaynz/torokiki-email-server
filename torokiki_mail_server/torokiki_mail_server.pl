@@ -62,7 +62,6 @@ require 'stash/stash.pl';
 
 # ---------------- Globals ---------------- 
 
-my $stash_dir = "./stash";
 use constant TOROKIKI_SERVER_VERS => "0.1";
 
 

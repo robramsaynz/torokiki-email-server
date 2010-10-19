@@ -4,6 +4,7 @@
 
 use strict;
 
+require 'comms/http_torokiki_api.pl';
 require 'send/send_emails.pl';
 
 
@@ -18,7 +19,7 @@ sub actions::get_content($)
 	}
 
 
-	my ($err, $rtn) = &comms::get_content_from_torokiki_server( $eml_data->{get_url} );
+	my ($err, $rtn) = &comms::get_content_from_torokiki_server($eml_data);
 	
 	if ($err) 
 	{

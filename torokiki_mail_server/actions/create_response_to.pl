@@ -5,7 +5,8 @@
 
 use strict;
 
-#use comms::http_torokiki_api;
+use Email::MIME;
+
 require 'comms/http_torokiki_api.pl';
 require 'send/send_emails.pl';
 
@@ -21,7 +22,7 @@ sub actions::create_response_to_content($)
 	}
 
 
-	my ($err, $rtn) = &comms::send_api_obj_to_torokiki_server( $eml_data->{api_obj} );
+	my ($err, $rtn) = &comms::send_api_obj_to_torokiki_server($eml_data);
 
 	if ($err)
 	{
