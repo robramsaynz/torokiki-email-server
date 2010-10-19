@@ -8,6 +8,7 @@
 use strict;
 
 use JSON::PP;
+use MIME::Base64;
 
 #require 'parse_email/mime_walking.pl';
 
@@ -39,11 +40,13 @@ sub parse_email::get_api_obj_from_email($)
 	my $text = &parse_email::get_email_txt($eml_mime);
 	my $tags = &parse_email::tag_value_pairs_to_hash($text);
 
+
 	# ??: Should check for and remove: remove me <save@me>
-	$api_obj->{Submitter} = $tags->{From};
+	$api_obj->{Submitter} = $eml_mime->header("From");
 
     $eml_mime->header("Subject") =~ m/^[\w-]+:\s*'(\S+)'\s*$/;
 	$api_obj->{InspiredBy} = $1;
+
 
 	# Save data from (case insensitive) tags.
 	for (keys %$tags)
@@ -57,15 +60,28 @@ sub parse_email::get_api_obj_from_email($)
 		elsif (/text/i)
 			{ $api_obj->{Text} = $tags->{$_}; }
 	}
+
 	
 	# Get the first attachment.	
 	my $mime_obj = &parse_email::return_mime_attach_num($eml_mime, 1);
-#   $api_obj->{Attachment}->{name} = $mime_obj->header("name") or my $mime_obj->header("name")
-    $api_obj->{Attachment}->{data} = $mime_obj->body();
 
+	my $attach_name = $mime_obj->filename();	
+	# Note that this will create an imaginary  name for the file 
+	# if one isn't supplied
+
+	my $attach_bin_data = $mime_obj->body();
+	my $attach_b64_data = MIME::Base64::encode($attach_bin_data);
+	$attach_b64_data =~ s/\n//g;
+
+	$api_obj->{Attachment}->{name} = $attach_name;
+    $api_obj->{Attachment}->{data} = $attach_b64_data;
+
+
+	# Identify yourself
     $api_obj->{APICaller}->{service} = "Torokiki Mailserver ".TOROKIKI_SERVER_VERS;
 	# ??: Not filled out at the moment (may need to be in the future): 
-    $api_obj->{APICaller}->{id} = undef;
+    $api_obj->{APICaller}->{id} = "00000A";
+
 
 	return $api_obj;
 }
